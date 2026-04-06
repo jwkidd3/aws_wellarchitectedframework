@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 2 — IAM Least Privilege Review</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2em; }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul, .reveal ol { line-height: 1.5; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal pre code { padding:12px; font-size:0.6em; line-height:1.3; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h1,
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] h3,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.55em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide" data-background-color="#FF9900">
+  <span class="lab-tag">Hands-On Lab · 30 min</span>
+  <h1>Lab 2</h1>
+  <h3 style="color:#fff">IAM Least Privilege Review</h3>
+  <p class="small" style="color:#fff">Pillar: Security</p>
+</section>
+
+<section>
+  <h2>Objective</h2>
+  <p>Read a sample IAM policy attached to an application role, identify least-privilege violations, and rewrite it so the application can do its job — and nothing else.</p>
+</section>
+
+<section>
+  <h2>Scenario — <code>app-orders-processor</code></h2>
+  <ul>
+    <li>Reads order events from one SQS queue:<br>
+      <code>arn:aws:sqs:us-east-1:111122223333:orders-incoming</code></li>
+    <li>Writes to one DynamoDB table:<br>
+      <code>arn:aws:dynamodb:us-east-1:111122223333:table/orders</code></li>
+    <li>Writes to its own CloudWatch log group</li>
+    <li>Runs on EC2 in <code>111122223333 / us-east-1</code></li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Current Policy</h2>
+  <pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AppAccess",
+      "Effect": "Allow",
+      "Action": "*",
+      "Resource": "*"
+    },
+    {
+      "Sid": "ExtraStuff",
+      "Effect": "Allow",
+      "Action": [
+        "s3:*", "iam:PassRole",
+        "dynamodb:*", "sqs:*", "logs:*"
+      ],
+      "Resource": "*"
+    }
+  ]
+}</code></pre>
+</section>
+
+<section>
+  <h2>Tasks</h2>
+  <ol>
+    <li>List <strong>at least 5 violations</strong>. Consider action wildcards, resource wildcards, unneeded privileges, escalation risks, cross-region/account exposure.</li>
+    <li>Rewrite the policy — scoped by action <em>and</em> resource ARN.</li>
+    <li><strong>Bonus:</strong> add a <code>Condition</code> restricting the role to <code>us-east-1</code>.</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Hints</h2>
+  <ul>
+    <li>DynamoDB: <code>GetItem</code>, <code>PutItem</code>, <code>UpdateItem</code>, <code>BatchWriteItem</code></li>
+    <li>SQS: <code>ReceiveMessage</code>, <code>DeleteMessage</code>, <code>GetQueueAttributes</code></li>
+    <li>Logs: <code>CreateLogStream</code>, <code>PutLogEvents</code> — scope to log group ARN</li>
+    <li>Region condition key: <code>aws:RequestedRegion</code></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Sample Solution</h2>
+  <pre><code>{
+  "Statement": [
+    {
+      "Sid": "ReadOrderQueue",
+      "Effect": "Allow",
+      "Action": ["sqs:ReceiveMessage","sqs:DeleteMessage","sqs:GetQueueAttributes"],
+      "Resource": "arn:aws:sqs:us-east-1:111122223333:orders-incoming"
+    },
+    {
+      "Sid": "WriteOrdersTable",
+      "Effect": "Allow",
+      "Action": ["dynamodb:GetItem","dynamodb:PutItem","dynamodb:UpdateItem","dynamodb:BatchWriteItem"],
+      "Resource": "arn:aws:dynamodb:us-east-1:111122223333:table/orders"
+    },
+    {
+      "Sid": "WriteAppLogs",
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogStream","logs:PutLogEvents"],
+      "Resource": "arn:aws:logs:us-east-1:111122223333:log-group:/app/orders-processor:*"
+    }
+  ]
+}</code></pre>
+</section>
+
+<section data-background-color="#146EB4">
+  <h2>Discussion</h2>
+  <ul>
+    <li>How would you detect a policy like the original <em>before</em> it reaches production?</li>
+    <li>Which AWS services help enforce least-privilege?<br>
+      <span class="small" style="color:#cce">IAM Access Analyzer · SCPs · Config rules</span></li>
+  </ul>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

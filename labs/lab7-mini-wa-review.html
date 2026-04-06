@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 7 — Mini Well-Architected Review</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2em; }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul, .reveal ol { line-height: 1.5; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h1,
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] h3,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.55em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide" data-background-color="#FF9900">
+  <span class="lab-tag">Capstone Lab · 45 min</span>
+  <h1>Lab 7</h1>
+  <h3 style="color:#fff">Mini Well-Architected Review</h3>
+  <p class="small" style="color:#fff">All six pillars</p>
+</section>
+
+<section>
+  <h2>Objective</h2>
+  <p>Run a lightweight Well-Architected Review against a sample workload, assign risk levels across all six pillars, and produce a prioritized remediation roadmap.</p>
+  <p class="small">Work in pairs or small groups. The point is the <em>conversation</em> the framework forces.</p>
+</section>
+
+<section>
+  <h2>The Workload — "OrderFlow"</h2>
+  <ul>
+    <li>B2B order-management SaaS, ~3 years old</li>
+    <li>Team inherited it last quarter</li>
+    <li>Single AWS account, <code>us-east-1</code> only</li>
+    <li>ALB → 6 × <code>m5.large</code> EC2, fixed (no Auto Scaling), Node.js</li>
+    <li>Aurora MySQL, 1 writer + 1 reader, single AZ</li>
+  </ul>
+</section>
+
+<section>
+  <h2>OrderFlow (cont.)</h2>
+  <ul>
+    <li>S3 bucket for customer uploads, no lifecycle</li>
+    <li>Jenkins on EC2 deploys via SSH + shell scripts</li>
+    <li>Default CloudWatch metrics, no custom dashboards</li>
+    <li>14 IAM users, several with <code>AdministratorAccess</code></li>
+    <li>Nightly Aurora snapshot, 7-day retention, never tested</li>
+  </ul>
+</section>
+
+<section>
+  <h2>OrderFlow (cont.)</h2>
+  <ul>
+    <li>One runbook in a Google Doc, last updated 14 months ago</li>
+    <li>Cost: ~$11k/month, no Savings Plans, no tagging policy</li>
+    <li>No CDN — static assets served from EC2</li>
+    <li>Customers report intermittent slow page loads at peak</li>
+  </ul>
+</section>
+
+<section>
+  <h2>For Each Pillar</h2>
+  <ol>
+    <li>Note <strong>2–3 findings</strong> — specific issues</li>
+    <li>Assign a <strong>risk</strong>: High / Medium / None</li>
+    <li>Pick the <strong>highest-impact fix</strong> for that pillar</li>
+  </ol>
+  <p class="small">Six pillars: OpEx · Security · Reliability · Performance · Cost · Sustainability</p>
+</section>
+
+<section>
+  <h2>Then Across All Pillars</h2>
+  <ol>
+    <li><strong>Roadmap</strong> — top 5 items in order, with effort (S/M/L)</li>
+    <li><strong>Cross-pillar wins</strong> — fixes that help two or more pillars</li>
+    <li><strong>Trade-offs</strong> — fixing one pillar hurts another, how you'd negotiate</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Deliverable — One-Page Summary</h2>
+  <ul>
+    <li>The <strong>3 things</strong> you'd do this sprint</li>
+    <li>The <strong>2 things</strong> you'd do this quarter</li>
+    <li>The <strong>1 thing</strong> leadership needs to know about <em>now</em></li>
+  </ul>
+</section>
+
+<section data-background-color="#146EB4">
+  <h2>Debrief</h2>
+  <ul>
+    <li>Where did your team disagree most — priority or facts?</li>
+    <li>How would answers change if OrderFlow were Tier-0 financial software?</li>
+    <li>Which pillar was hardest to assess from this description?</li>
+  </ul>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

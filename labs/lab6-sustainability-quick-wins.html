@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lab 6 — Sustainability Quick Wins</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2em; }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul, .reveal ol { line-height: 1.5; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h1,
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] h3,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.55em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide" data-background-color="#FF9900">
+  <span class="lab-tag">Hands-On Lab · 20 min</span>
+  <h1>Lab 6</h1>
+  <h3 style="color:#fff">Sustainability Quick Wins</h3>
+  <p class="small" style="color:#fff">Pillar: Sustainability</p>
+</section>
+
+<section>
+  <h2>Objective</h2>
+  <p>Review a small reference architecture, list sustainability improvements, and show how each one also improves at least one other pillar.</p>
+</section>
+
+<section>
+  <h2>The Architecture (B2B SaaS Analytics)</h2>
+  <ul>
+    <li><strong>Region:</strong> <code>us-east-1</code> only (chosen years ago, no reason)</li>
+    <li><strong>Web:</strong> 12 × <code>m5.xlarge</code>, fixed 24×7, avg CPU 12%</li>
+    <li><strong>API:</strong> 8 × <code>c5.2xlarge</code>, fixed 24×7, avg CPU 18%</li>
+    <li><strong>Workers:</strong> 6 × <code>m5.2xlarge</code>, nightly batch ~2h, idle 22h</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Architecture (cont.)</h2>
+  <ul>
+    <li><strong>DB:</strong> Aurora 2 × <code>db.r5.4xlarge</code> + identical staging clone 24×7</li>
+    <li><strong>Storage:</strong> 45 TB S3 Standard, 70% not accessed in 6+ months, no lifecycle</li>
+    <li><strong>Logs:</strong> CloudWatch with no retention</li>
+    <li><strong>CDN:</strong> none — every request hits ALB, including static JS</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tasks</h2>
+  <ol>
+    <li>List <strong>6–8 sustainability improvements</strong>. For each:
+      <ul>
+        <li>What you'd change</li>
+        <li>Which other pillar it benefits</li>
+        <li>Effort: S / M / L</li>
+      </ul>
+    </li>
+    <li>Pick the <strong>top 3</strong> to do this quarter — defend the order</li>
+    <li>Identify one improvement that would <em>worsen</em> another pillar if done carelessly</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Hints — Look For</h2>
+  <ul>
+    <li>Idle capacity, oversized instances</li>
+    <li>Missing auto-scaling</li>
+    <li>Missing storage tiering / lifecycle</li>
+    <li>Missing CDN</li>
+    <li>Missing log retention</li>
+    <li>Region choice for non-latency-sensitive work</li>
+    <li>Older instance generations (Graviton)</li>
+  </ul>
+</section>
+
+<section data-background-color="#146EB4">
+  <h2>Discussion</h2>
+  <ul>
+    <li>Did your top 3 align with what Lab 5 (Cost) would have prioritized? Why?</li>
+    <li>For the worker tier — do those workers need to be EC2 at all?</li>
+    <li>"Sustainability is just Cost Optimization with a green hat." Where does that break down?</li>
+  </ul>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 — Introduction &amp; Framework Overview</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; letter-spacing: -0.5px; }
+  .reveal h1 { font-size: 2.2em; }
+  .reveal h2 { font-size: 1.6em; }
+  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul { line-height: 1.5; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .pillar-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; font-size:0.85em; }
+  .reveal .pillar-grid div { border-left:4px solid var(--aws-orange); padding-left:10px; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide">
+  <h1>AWS Well-Architected</h1>
+  <h3 class="accent">Best Practices Workshop</h3>
+  <p class="small">Module 1 — Introduction</p>
+</section>
+
+<section>
+  <h2>What &amp; Why</h2>
+  <ul>
+    <li>AWS's set of cloud architecture best practices, distilled from thousands of customer reviews</li>
+    <li>Shared vocabulary for trade-offs across engineering, security, and finance</li>
+    <li>Catches risk <em>before</em> it becomes an incident</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Six Pillars</h2>
+  <div class="pillar-grid">
+    <div><strong>1. Operational Excellence</strong></div>
+    <div><strong>2. Security</strong></div>
+    <div><strong>3. Reliability</strong></div>
+    <div><strong>4. Performance Efficiency</strong></div>
+    <div><strong>5. Cost Optimization</strong></div>
+    <div><strong>6. Sustainability</strong></div>
+  </div>
+  <p class="small">One pillar per module. Each pillar has a hands-on lab.</p>
+</section>
+
+<section>
+  <h2>The Well-Architected Tool</h2>
+  <ul>
+    <li>Free service in the AWS Console</li>
+    <li>Guided questionnaire per pillar, per workload</li>
+    <li>Generates a risk report and remediation plan</li>
+    <li>We'll run a mini-review as the capstone lab</li>
+  </ul>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

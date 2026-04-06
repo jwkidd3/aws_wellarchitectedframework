@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 7 — Sustainability</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2.2em; }
+  .reveal h2 { font-size: 1.6em; }
+  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul { line-height: 1.5; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.6em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide">
+  <h1>Pillar 6</h1>
+  <h3 class="accent">Sustainability</h3>
+</section>
+
+<section>
+  <h2>Shared Responsibility</h2>
+  <ul>
+    <li><strong>AWS:</strong> sustainability <em>of</em> the cloud — power, hardware, cooling</li>
+    <li><strong>You:</strong> sustainability <em>in</em> the cloud — what &amp; how you provision</li>
+    <li>Goal: more useful work per unit of energy</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Levers</h2>
+  <ul>
+    <li><strong>Region selection</strong> — greener regions for non-latency-sensitive work</li>
+    <li><strong>Right-size &amp; auto-scale</strong> — high utilization beats idle</li>
+    <li><strong>Managed services</strong> — multi-tenant efficiency</li>
+    <li><strong>Storage tiering &amp; lifecycle</strong> — don't store what you won't read</li>
+    <li><strong>Graviton</strong> — more work per watt</li>
+  </ul>
+</section>
+
+<section data-background-color="#FF9900">
+  <span class="lab-tag">Hands-On Lab</span>
+  <h2>Lab 6 — Sustainability Quick Wins</h2>
+  <ul>
+    <li>Review an architecture diagram</li>
+    <li>List sustainability improvements</li>
+    <li>Map each one to a Cost or Performance benefit</li>
+  </ul>
+  <p class="small"><code>labs/lab6-sustainability-quick-wins.md</code></p>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 8 — Practical Application &amp; Wrap-Up</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2.2em; }
+  .reveal h2 { font-size: 1.6em; }
+  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul { line-height: 1.5; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.6em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide">
+  <h1>Module 8</h1>
+  <h3 class="accent">Practical Application &amp; Wrap-Up</h3>
+</section>
+
+<section>
+  <h2>Running a Well-Architected Review</h2>
+  <ul>
+    <li>Open the Well-Architected Tool, define the workload</li>
+    <li>Walk pillar by pillar — answer honestly, not aspirationally</li>
+    <li>Save a milestone as your baseline</li>
+    <li>Group findings into themes &amp; assign owners</li>
+    <li>Re-run on a cadence (quarterly works for most teams)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Prioritization &amp; SDLC Integration</h2>
+  <ul>
+    <li>High-risk Security &amp; Reliability first</li>
+    <li>Then quick wins (low effort, medium risk)</li>
+    <li>Lightweight review at design time, full review at launches</li>
+    <li>Track in your normal backlog — not a separate spreadsheet</li>
+  </ul>
+</section>
+
+<section data-background-color="#FF9900">
+  <span class="lab-tag">Capstone Lab</span>
+  <h2>Lab 7 — Mini Well-Architected Review</h2>
+  <ul>
+    <li>One sample workload, all six pillars</li>
+    <li>Score risk, write findings, build a roadmap</li>
+    <li>Pairs or small groups</li>
+  </ul>
+  <p class="small"><code>labs/lab7-mini-wa-review.md</code></p>
+</section>
+
+<section data-background-color="#232F3E">
+  <h2>Recap</h2>
+  <ul>
+    <li>Six pillars, six labs, one capstone</li>
+    <li>The framework is a vocabulary — use it in design reviews</li>
+    <li>Continuous, not annual</li>
+  </ul>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

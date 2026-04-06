@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2 — Operational Excellence</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
+  .reveal h1 { font-size: 2.2em; }
+  .reveal h2 { font-size: 1.6em; }
+  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul { line-height: 1.5; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
+    padding:6px 14px; border-radius:20px; font-size:0.6em; font-weight:700;
+    letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide">
+  <h1>Pillar 1</h1>
+  <h3 class="accent">Operational Excellence</h3>
+</section>
+
+<section>
+  <h2>Design Principles</h2>
+  <ul>
+    <li><strong>Operations as code</strong> — script everything</li>
+    <li><strong>Small, reversible changes</strong></li>
+    <li><strong>Anticipate failure</strong> — pre-mortems &amp; game days</li>
+    <li><strong>Learn from every event</strong></li>
+  </ul>
+</section>
+
+<section>
+  <h2>Observability Stack</h2>
+  <ul>
+    <li><strong>CloudWatch</strong> — metrics, logs, alarms</li>
+    <li><strong>X-Ray</strong> — distributed tracing</li>
+    <li><strong>CloudTrail</strong> — API audit log</li>
+  </ul>
+  <p class="small"><em>Is it healthy? Where's the latency? Who changed it?</em></p>
+</section>
+
+<section>
+  <h2>Runbooks &amp; IaC</h2>
+  <ul>
+    <li><strong>Runbook</strong> = known procedure, known situation</li>
+    <li><strong>Playbook</strong> = investigative steps for the unknown</li>
+    <li><strong>CloudFormation / CDK</strong> — repeatable, reviewed, drift-detectable</li>
+    <li>Manual console changes are operational debt</li>
+  </ul>
+</section>
+
+<section data-background-color="#FF9900">
+  <span class="lab-tag">Hands-On Lab</span>
+  <h2>Lab 1 — Runbook Authoring</h2>
+  <ul>
+    <li>Take an incident scenario</li>
+    <li>Write a runbook another engineer could execute at 3 AM</li>
+    <li>Identify which steps to automate next</li>
+  </ul>
+  <p class="small"><code>labs/lab1-runbook-authoring.md</code></p>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+</body>
+</html>

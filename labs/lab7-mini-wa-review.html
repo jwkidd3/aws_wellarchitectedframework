@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2em; }
-  .reveal h2 { font-size: 1.5em; }
-  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.05em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul, .reveal ol { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal .glossary li { font-size: 0.72em; margin-bottom: 4px; }
   .reveal section[data-background-color] h1,
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] h3,
@@ -42,34 +43,40 @@
 <section>
   <h2>Objective</h2>
   <p>Run a lightweight Well-Architected Review against a sample workload, assign risk levels across all six pillars, and produce a prioritized remediation roadmap.</p>
-  <p class="small">Work in pairs or small groups. The point is the <em>conversation</em> the framework forces.</p>
+  <p class="small">Work in pairs or small groups. The point is the <em>conversation</em> the framework forces — not a perfect score.</p>
+</section>
+
+<section>
+  <h2>Terms You'll See</h2>
+  <ul class="glossary">
+    <li><strong>Workload</strong> — the collection of components that delivers some business value</li>
+    <li><strong>Single-AZ</strong> — running in only one Availability Zone, so an AZ failure takes the workload down</li>
+    <li><strong>AdministratorAccess</strong> — an AWS-managed IAM policy that grants full permissions; almost always too broad</li>
+    <li><strong>Snapshot</strong> — a point-in-time backup of a database or disk volume</li>
+    <li><strong>Tier-0</strong> — the highest criticality tier; failure has severe business or regulatory consequences</li>
+    <li><strong>Jenkins</strong> — a popular open-source CI/CD (continuous integration/deployment) tool</li>
+    <li><strong>Savings Plan</strong> — commitment to a spend rate for 1 or 3 years for a discount</li>
+  </ul>
 </section>
 
 <section>
   <h2>The Workload — "OrderFlow"</h2>
+  <p class="small">B2B order-management SaaS, ~3 years old. The team inherited it last quarter.</p>
   <ul>
-    <li>B2B order-management SaaS, ~3 years old</li>
-    <li>Team inherited it last quarter</li>
     <li>Single AWS account, <code>us-east-1</code> only</li>
-    <li>ALB → 6 × <code>m5.large</code> EC2, fixed (no Auto Scaling), Node.js</li>
+    <li>ALB → 6 × <code>m5.large</code> EC2 (fixed, no Auto Scaling), running Node.js</li>
     <li>Aurora MySQL, 1 writer + 1 reader, single AZ</li>
+    <li>S3 bucket for customer file uploads (no lifecycle rules)</li>
+    <li>Jenkins box on EC2 deploys via SSH and shell scripts</li>
   </ul>
 </section>
 
 <section>
   <h2>OrderFlow (cont.)</h2>
   <ul>
-    <li>S3 bucket for customer uploads, no lifecycle</li>
-    <li>Jenkins on EC2 deploys via SSH + shell scripts</li>
-    <li>Default CloudWatch metrics, no custom dashboards</li>
-    <li>14 IAM users, several with <code>AdministratorAccess</code></li>
-    <li>Nightly Aurora snapshot, 7-day retention, never tested</li>
-  </ul>
-</section>
-
-<section>
-  <h2>OrderFlow (cont.)</h2>
-  <ul>
+    <li>CloudWatch metrics on by default; no custom dashboards</li>
+    <li>IAM: 14 users (humans + a couple of CI bots); several with <code>AdministratorAccess</code></li>
+    <li>Backups: nightly Aurora snapshot, 7-day retention, never tested</li>
     <li>One runbook in a Google Doc, last updated 14 months ago</li>
     <li>Cost: ~$11k/month, no Savings Plans, no tagging policy</li>
     <li>No CDN — static assets served from EC2</li>
@@ -80,24 +87,25 @@
 <section>
   <h2>For Each Pillar</h2>
   <ol>
-    <li>Note <strong>2–3 findings</strong> — specific issues</li>
+    <li>Note <strong>2–3 findings</strong> — specific issues you'd flag</li>
     <li>Assign a <strong>risk</strong>: High / Medium / None</li>
-    <li>Pick the <strong>highest-impact fix</strong> for that pillar</li>
+    <li>Pick the <strong>single highest-impact fix</strong> for that pillar</li>
   </ol>
-  <p class="small">Six pillars: OpEx · Security · Reliability · Performance · Cost · Sustainability</p>
+  <p class="small">Six pillars: Operational Excellence · Security · Reliability · Performance · Cost · Sustainability</p>
 </section>
 
 <section>
   <h2>Then Across All Pillars</h2>
   <ol>
-    <li><strong>Roadmap</strong> — top 5 items in order, with effort (S/M/L)</li>
+    <li><strong>Roadmap</strong> — top 5 items overall, in order, with rough effort (S/M/L)</li>
     <li><strong>Cross-pillar wins</strong> — fixes that help two or more pillars</li>
-    <li><strong>Trade-offs</strong> — fixing one pillar hurts another, how you'd negotiate</li>
+    <li><strong>Trade-offs</strong> — where fixing one pillar hurts another, and how you'd negotiate</li>
   </ol>
 </section>
 
 <section>
   <h2>Deliverable — One-Page Summary</h2>
+  <p>A one-page summary you'd present to the engineering manager:</p>
   <ul>
     <li>The <strong>3 things</strong> you'd do this sprint</li>
     <li>The <strong>2 things</strong> you'd do this quarter</li>
@@ -105,17 +113,27 @@
   </ul>
 </section>
 
+<section>
+  <h2>Console Exploration (read-only)</h2>
+  <p class="small">Navigate only — <strong>do not define a workload or save anything</strong>.</p>
+  <ol>
+    <li>Search for <strong>Well-Architected Tool</strong> in the console.</li>
+    <li>Click <strong>Lenses</strong> in the left nav — browse the lens catalog (Serverless, SaaS, Machine Learning, etc.). Each is a pillar add-on for a specific workload type.</li>
+    <li>Back on the dashboard, browse any existing workloads. Open one and look at the pillar question structure — this is exactly the conversation you just had on paper.</li>
+  </ol>
+</section>
+
 <section data-background-color="#146EB4">
   <h2>Debrief</h2>
   <ul>
-    <li>Where did your team disagree most — priority or facts?</li>
-    <li>How would answers change if OrderFlow were Tier-0 financial software?</li>
-    <li>Which pillar was hardest to assess from this description?</li>
+    <li>Where did your team disagree most — priority, or facts?</li>
+    <li>How would answers change if OrderFlow were Tier-0 financial software? Or an internal tool for 20 users?</li>
+    <li>Which pillar was hardest to assess from the description alone? What would you ask the team?</li>
   </ul>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

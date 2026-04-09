@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2em; }
-  .reveal h2 { font-size: 1.5em; }
-  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.05em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul, .reveal ol { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal .glossary li { font-size: 0.75em; margin-bottom: 4px; }
   .reveal section[data-background-color] h1,
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] h3,
@@ -33,39 +34,77 @@
 <div class="reveal"><div class="slides">
 
 <section class="title-slide" data-background-color="#FF9900">
-  <span class="lab-tag">Hands-On Lab · 25 min</span>
+  <span class="lab-tag">Hands-On Lab · 30 min</span>
   <h1>Lab 1</h1>
   <h3 style="color:#fff">Runbook Authoring</h3>
   <p class="small" style="color:#fff">Pillar: Operational Excellence</p>
 </section>
 
 <section>
+  <h2>AWS Account Access</h2>
+  <p class="small">Use this account for exploration today. Labs are paper-based, but feel free to open services in the console as you work through them.</p>
+  <ul>
+    <li><strong>Console URL:</strong><br>
+      <code>https://kiddcorp.signin.aws.amazon.com/console</code></li>
+    <li><strong>Username:</strong> <code>user1</code>, <code>user2</code>, <code>user3</code>, …<br>
+      <span class="small">Your instructor will assign you a specific user ID</span></li>
+    <li><strong>Password:</strong> provided by your instructor</li>
+    <li>One user per student — please don't share IDs</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Quick Orientation (5 min)</h2>
+  <p>Once logged in, take a minute to find these — they'll come up throughout the day:</p>
+  <ul>
+    <li><strong>Region selector</strong> (top-right) — make sure you're in <code>us-east-1</code></li>
+    <li><strong>CloudWatch</strong> — search "CloudWatch" in the top search bar</li>
+    <li><strong>IAM</strong> — this is where policies live (Lab 2)</li>
+    <li><strong>Cost Explorer</strong> — under Billing (Lab 5)</li>
+    <li><strong>Well-Architected Tool</strong> — we'll use this in Lab 7</li>
+  </ul>
+  <p class="small">Don't create or modify resources — browse only.</p>
+</section>
+
+<section>
   <h2>Objective</h2>
-  <p>Write a runbook clear enough that another engineer — woken at 3 AM, never having seen the system — could execute it successfully.</p>
+  <p>Write a <strong>runbook</strong> — a step-by-step procedure — clear enough that another engineer, woken at 3 AM and never having seen the system, could execute it successfully.</p>
   <p>Then identify which steps you would automate first.</p>
+</section>
+
+<section>
+  <h2>Terms You'll See</h2>
+  <ul class="glossary">
+    <li><strong>ALB</strong> (Application Load Balancer) — AWS service that distributes incoming HTTP requests across multiple servers</li>
+    <li><strong>ASG</strong> (Auto Scaling Group) — a collection of EC2 servers that grows and shrinks automatically based on load</li>
+    <li><strong>Aurora</strong> — AWS's managed MySQL/PostgreSQL-compatible database</li>
+    <li><strong>Connection pool</strong> — a reusable set of database connections an app keeps open; if all are busy, new requests wait</li>
+    <li><strong>5xx error</strong> — HTTP status codes 500–599, meaning the server failed to handle the request</li>
+    <li><strong>PagerDuty</strong> — a third-party on-call alerting service</li>
+  </ul>
 </section>
 
 <section>
   <h2>Scenario</h2>
   <ul>
-    <li>Customer-facing API on EC2 ASG behind an ALB</li>
-    <li>Aurora MySQL backend</li>
-    <li>Alert just fired:<br>
+    <li>Customer-facing API on an EC2 Auto Scaling group behind an Application Load Balancer</li>
+    <li>Backed by an Aurora MySQL database</li>
+    <li>The alert just fired:<br>
       <code>api-prod / 5xx error rate &gt; 5% for 10 min</code></li>
-    <li>Usually caused by Aurora connection pool exhaustion from a stuck app thread</li>
+    <li>You've seen this before — it's usually Aurora's connection pool being exhausted because a stuck application thread is holding connections open</li>
   </ul>
 </section>
 
 <section>
   <h2>Your Runbook Must Include</h2>
   <ol>
-    <li><strong>Title &amp; symptom</strong></li>
-    <li><strong>Pre-checks</strong> — confirm this is the right runbook</li>
-    <li><strong>Mitigation steps</strong> — ordered, specific, with expected outcome</li>
+    <li><strong>Title &amp; symptom</strong> — what alert triggered this runbook</li>
+    <li><strong>Pre-checks</strong> — quick checks to confirm this is the right runbook</li>
+    <li><strong>Mitigation steps</strong> — ordered, specific, with expected outcome at each step</li>
     <li><strong>Verification</strong> — how you know it worked</li>
-    <li><strong>Rollback</strong></li>
-    <li><strong>Escalation</strong></li>
-    <li><strong>Post-incident</strong> — what to capture for the retro</li>
+    <li><strong>Rollback</strong> — what to do if a step makes things worse</li>
+    <li><strong>Escalation</strong> — who to page and when</li>
+    <li><strong>Post-incident</strong> — what to capture for the retrospective</li>
   </ol>
 </section>
 
@@ -73,7 +112,7 @@
   <h2>Constraints</h2>
   <ul>
     <li>No step may say "investigate" or "check things" — be concrete</li>
-    <li>Every command should be copy-pasteable</li>
+    <li>Every command should be copy-pasteable (placeholders like <code>&lt;instance-id&gt;</code> are fine)</li>
     <li>Maximum one page</li>
   </ul>
 </section>
@@ -99,6 +138,6 @@
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

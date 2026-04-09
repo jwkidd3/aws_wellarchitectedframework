@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.7em; color:#555; }
+  .reveal .glossary li { font-size: 0.78em; margin-bottom: 4px; }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -33,35 +34,57 @@
 <section class="title-slide">
   <h1>Pillar 1</h1>
   <h3 class="accent">Operational Excellence</h3>
+  <p class="small">How you run, monitor, and improve systems over time.</p>
 </section>
 
 <section>
   <h2>Design Principles</h2>
   <ul>
-    <li><strong>Operations as code</strong> — script everything</li>
-    <li><strong>Small, reversible changes</strong></li>
-    <li><strong>Anticipate failure</strong> — pre-mortems &amp; game days</li>
-    <li><strong>Learn from every event</strong></li>
+    <li><strong>Operations as code</strong> — script everything you'd otherwise do by hand</li>
+    <li><strong>Small, reversible changes</strong> — deploy often, limit blast radius</li>
+    <li><strong>Anticipate failure</strong> — pre-mortems &amp; game days (practice incidents)</li>
+    <li><strong>Learn from every event</strong> — every incident produces an action item</li>
   </ul>
 </section>
 
 <section>
   <h2>Observability Stack</h2>
+  <p class="small"><em>Observability</em> = the ability to understand what a system is doing from the outside, without having to ship new code.</p>
   <ul>
-    <li><strong>CloudWatch</strong> — metrics, logs, alarms</li>
-    <li><strong>X-Ray</strong> — distributed tracing</li>
-    <li><strong>CloudTrail</strong> — API audit log</li>
+    <li><strong>Metrics</strong> — numbers over time (CPU at 42%, 123 requests/sec). Cheap to store, fast to query.</li>
+    <li><strong>Logs</strong> — text events ("user 42 logged in"). Richer than metrics, more expensive to store.</li>
+    <li><strong>Traces</strong> — the full path of one request across every service it touched, with timing for each hop.</li>
   </ul>
-  <p class="small"><em>Is it healthy? Where's the latency? Who changed it?</em></p>
 </section>
 
 <section>
-  <h2>Runbooks &amp; IaC</h2>
+  <h2>AWS Observability Services</h2>
   <ul>
-    <li><strong>Runbook</strong> = known procedure, known situation</li>
-    <li><strong>Playbook</strong> = investigative steps for the unknown</li>
-    <li><strong>CloudFormation / CDK</strong> — repeatable, reviewed, drift-detectable</li>
-    <li>Manual console changes are operational debt</li>
+    <li><strong>CloudWatch</strong> — metrics, logs, alarms, and dashboards in one service</li>
+    <li><strong>X-Ray</strong> — distributed tracing: pinpoint the slow span in a multi-service request</li>
+    <li><strong>CloudTrail</strong> — audit log of every API call made in your account (who did what, when)</li>
+  </ul>
+  <p class="small">Three questions these services answer: <em>Is it healthy? Where's the latency? Who changed it?</em></p>
+</section>
+
+<section>
+  <h2>Runbooks &amp; Playbooks</h2>
+  <ul>
+    <li><strong>Runbook</strong> — a written procedure for a <em>known</em> situation ("when X fires, do A-B-C")</li>
+    <li><strong>Playbook</strong> — investigative steps for an <em>unknown</em> situation ("something's wrong, here's how to look")</li>
+    <li>Both should live in version control next to the code</li>
+    <li>Anything you do twice by hand should be scripted</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Infrastructure as Code (IaC)</h2>
+  <p class="small"><em>IaC</em> = define your cloud resources in text files that are version-controlled and reviewed like application code.</p>
+  <ul>
+    <li><strong>CloudFormation</strong> — AWS's native IaC; you write YAML or JSON templates and AWS creates the resources</li>
+    <li><strong>CDK</strong> (Cloud Development Kit) — define infrastructure in TypeScript/Python/Java; compiles down to CloudFormation</li>
+    <li>Benefits: repeatable, peer-reviewable, drift-detectable</li>
+    <li>Changes made manually in the console are "operational debt"</li>
   </ul>
 </section>
 
@@ -78,6 +101,6 @@
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

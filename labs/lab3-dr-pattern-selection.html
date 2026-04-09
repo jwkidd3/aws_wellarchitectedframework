@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2em; }
-  .reveal h2 { font-size: 1.5em; }
-  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.05em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul, .reveal ol { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal .glossary li { font-size: 0.72em; margin-bottom: 4px; }
   .reveal section[data-background-color] h1,
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] h3,
@@ -27,7 +28,7 @@
   .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
     padding:6px 14px; border-radius:20px; font-size:0.55em; font-weight:700;
     letter-spacing:1px; text-transform:uppercase; }
-  .reveal table { font-size: 0.75em; }
+  .reveal table { font-size: 0.72em; }
   .reveal table th, .reveal table td { padding: 6px 12px; border-bottom:1px solid #ddd; }
 </style>
 </head>
@@ -43,7 +44,21 @@
 
 <section>
   <h2>Objective</h2>
-  <p>For each of three workloads, choose a DR pattern, justify it against RTO/RPO and budget, and identify what you would test to prove it works.</p>
+  <p>For each of three workloads, choose a <strong>DR</strong> (Disaster Recovery) pattern, justify it against the required RTO/RPO and budget, and identify what you would test to prove it works.</p>
+</section>
+
+<section>
+  <h2>Terms You'll See</h2>
+  <ul class="glossary">
+    <li><strong>RTO</strong> (Recovery Time Objective) — how long the system can be down before it must be back</li>
+    <li><strong>RPO</strong> (Recovery Point Objective) — how much data you can afford to lose (e.g., "last 5 minutes")</li>
+    <li><strong>Region</strong> — a geographic AWS location (e.g., <code>us-east-1</code>)</li>
+    <li><strong>AWS Backup</strong> — a central service that schedules and manages backups across many AWS services</li>
+    <li><strong>CRR</strong> (Cross-Region Replication) — automatic copying of data (e.g., S3 objects) to another region</li>
+    <li><strong>Aurora Global Database</strong> — an Aurora DB spanning multiple regions with &lt;1 second replication</li>
+    <li><strong>DynamoDB Global Tables</strong> — multi-region DynamoDB with automatic two-way replication</li>
+    <li><strong>Route 53 ARC</strong> (Application Recovery Controller) — a DNS-based service for controlled failover between regions</li>
+  </ul>
 </section>
 
 <section>
@@ -55,36 +70,37 @@
     <tr><td>Warm Standby</td><td>Minutes</td><td>Sec–min</td><td>$$$</td></tr>
     <tr><td>Active/Active</td><td>Seconds</td><td>~Zero</td><td>$$$$</td></tr>
   </table>
+  <p class="small"><strong>Pilot Light</strong> = minimal copy of the system always running elsewhere. <strong>Warm Standby</strong> = full copy, scaled down, ready to scale up. <strong>Active/Active</strong> = both sides handle live traffic.</p>
 </section>
 
 <section>
   <h2>Workload A — Internal HR Reporting</h2>
   <ul>
     <li>~50 internal users, business hours only</li>
-    <li>Aurora MySQL, ~20 GB</li>
-    <li>Outage tolerable for a workday; data loss &lt; 24 h</li>
-    <li>Budget: minimal (IT chargeback only)</li>
+    <li>Aurora MySQL backend, ~20 GB of data</li>
+    <li>Outage tolerable for a full workday; data loss must be &lt; 24 hours</li>
+    <li>Budget: minimal (funded by internal IT chargeback)</li>
   </ul>
 </section>
 
 <section>
   <h2>Workload B — E-Commerce Storefront</h2>
   <ul>
-    <li>~5,000 concurrent shoppers, 24×7</li>
-    <li>DynamoDB + Lambda + CloudFront</li>
-    <li>Every minute of downtime = lost revenue &amp; brand damage</li>
-    <li>Compliance: in-region or approved regions</li>
-    <li>Budget: significant</li>
+    <li>~5,000 concurrent shoppers at peak, 24×7</li>
+    <li>DynamoDB + Lambda + CloudFront (AWS's CDN)</li>
+    <li>Every minute of downtime = lost revenue and brand damage</li>
+    <li>Compliance: data must stay in-region or in approved regions</li>
+    <li>Budget: significant — revenue protection justifies it</li>
   </ul>
 </section>
 
 <section>
-  <h2>Workload C — Real-Time Trading</h2>
+  <h2>Workload C — Real-Time Trading Platform</h2>
   <ul>
-    <li>Tier-0 financial workload</li>
+    <li>Tier-0 (most critical tier) financial workload</li>
     <li>Sub-second order routing</li>
-    <li>Any data loss unacceptable</li>
-    <li>Any meaningful downtime = regulatory reporting</li>
+    <li>Any data loss is unacceptable</li>
+    <li>Any meaningful downtime triggers regulatory reporting</li>
     <li>Budget: essentially open</li>
   </ul>
 </section>
@@ -92,25 +108,35 @@
 <section>
   <h2>For Each Workload</h2>
   <ol>
-    <li><strong>Pattern choice</strong> — and 2–3 sentence justification</li>
+    <li><strong>Pattern choice</strong> — pick one pattern and justify in 2–3 sentences</li>
     <li><strong>Target RTO &amp; RPO</strong> — be specific</li>
-    <li><strong>AWS services</strong> — what you'd actually use</li>
-    <li><strong>Game-day test</strong> — one scenario per workload</li>
-    <li><strong>Top risk</strong> — most likely thing to break the plan</li>
+    <li><strong>AWS services</strong> — what you'd actually use (AWS Backup, CRR, Route 53 ARC, Aurora Global Database, S3 CRR, DynamoDB Global Tables…)</li>
+    <li><strong>Game-day test</strong> — one failure scenario you'd rehearse</li>
+    <li><strong>Top risk</strong> — the thing most likely to break the plan</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Console Exploration (read-only)</h2>
+  <p class="small">Navigate only — <strong>do not create, edit, or delete anything</strong>.</p>
+  <ol>
+    <li>Search for <strong>AWS Backup</strong> → <strong>Backup plans</strong>. Browse any existing plans and their rules.</li>
+    <li>Open <strong>Backup vaults</strong> in the left nav and look at what's stored.</li>
+    <li>Search for <strong>Route 53</strong> → <strong>Hosted zones</strong>. Notice how DNS records control traffic routing — the foundation of DR failover.</li>
   </ol>
 </section>
 
 <section data-background-color="#146EB4">
   <h2>Discussion</h2>
   <ul>
-    <li>Anyone pick Active/Active for Workload A? Why not?</li>
-    <li>Workload B: trap of "checked the box" CRR with no failover test</li>
+    <li>Did anyone pick Active/Active for Workload A? Why not?</li>
+    <li>Workload B: what's the trap of "checking the box" with cross-region replication but never testing failover?</li>
     <li>How does your DR pattern affect Cost (Pillar 5) and Sustainability (Pillar 6)?</li>
   </ul>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

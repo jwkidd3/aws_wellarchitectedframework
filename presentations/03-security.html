@@ -11,15 +11,16 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
   .reveal pre code { padding:12px; font-size:0.7em; line-height:1.35; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.7em; color:#555; }
+  .reveal .glossary li { font-size: 0.72em; margin-bottom: 4px; }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -34,24 +35,59 @@
 <section class="title-slide">
   <h1>Pillar 2</h1>
   <h3 class="accent">Security</h3>
+  <p class="small">Protect data, systems, and who-can-do-what.</p>
 </section>
 
 <section>
-  <h2>Identity &amp; Access</h2>
+  <h2>Authentication vs. Authorization</h2>
+  <p class="small">Two different questions people often conflate.</p>
   <ul>
-    <li><strong>Roles for workloads, federation for humans</strong> — no shared creds</li>
-    <li><strong>Least privilege</strong>, scoped to specific resources</li>
-    <li><strong>IAM Access Analyzer</strong> finds over-broad access</li>
+    <li><strong>Authentication</strong> = <em>who are you?</em> — proving identity (password, MFA, federated login)</li>
+    <li><strong>Authorization</strong> = <em>what can you do?</em> — what that identity is allowed to do once inside</li>
+    <li>A user can be authenticated (logged in) and still be denied an action (not authorized)</li>
+    <li>IAM covers both — but most IAM policy work is authorization</li>
   </ul>
 </section>
 
 <section>
-  <h2>Layered Defenses</h2>
+  <h2>Identity &amp; Access Management (IAM)</h2>
+  <p class="small"><em>IAM</em> is the AWS service that controls who (or what) can make which API calls on which resources.</p>
   <ul>
-    <li><strong>Detect:</strong> GuardDuty, Security Hub, Config rules</li>
-    <li><strong>Network:</strong> VPCs, security groups, WAF, Shield</li>
-    <li><strong>Data:</strong> KMS at rest, TLS in transit — by default</li>
-    <li>Pre-built break-glass roles for incident response</li>
+    <li><strong>Users</strong> for humans, <strong>roles</strong> for workloads — never share long-lived credentials</li>
+    <li><strong>Least privilege</strong> — grant only the permissions actually needed, scoped to specific resources</li>
+    <li>Prefer <strong>federation</strong> (log in via your company's identity provider) over creating IAM users</li>
+    <li><strong>IAM Access Analyzer</strong> — an AWS tool that flags policies granting access outside your account</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Detective Controls</h2>
+  <p class="small"><em>Detective controls</em> find problems after they happen so you can respond.</p>
+  <ul>
+    <li><strong>GuardDuty</strong> — threat detection service; watches network, DNS, and audit logs for suspicious activity</li>
+    <li><strong>Security Hub</strong> — central dashboard that aggregates findings from GuardDuty and others, scores them against standards like CIS</li>
+    <li><strong>AWS Config</strong> — records the state of every resource and lets you write rules like "no S3 bucket may be public"</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Network Protection</h2>
+  <ul>
+    <li><strong>VPC</strong> (Virtual Private Cloud) — your private network in AWS; divide into public and private <em>subnets</em></li>
+    <li><strong>Security groups</strong> — per-instance firewalls (stateful: return traffic is automatic)</li>
+    <li><strong>NACLs</strong> (Network Access Control Lists) — subnet-level firewalls (stateless)</li>
+    <li><strong>WAF</strong> (Web Application Firewall) — blocks attacks like SQL injection and cross-site scripting</li>
+    <li><strong>Shield</strong> — protection against DDoS attacks</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Data Protection</h2>
+  <ul>
+    <li><strong>At rest</strong> (stored on disk): use <strong>KMS</strong> (Key Management Service) to manage encryption keys — most AWS services encrypt by default</li>
+    <li><strong>In transit</strong> (moving across the network): use <strong>TLS</strong> (Transport Layer Security — the "s" in https)</li>
+    <li>Classify data — not every data set needs the same controls</li>
+    <li>Backups must be encrypted <em>and</em> tested</li>
   </ul>
 </section>
 
@@ -62,7 +98,7 @@
   "Action": "*",
   "Resource": "*"
 }</code></pre>
-  <p class="small">Three red flags. We'll find more in the lab.</p>
+  <p class="small">An IAM policy is a JSON document. <code>"*"</code> means "everything." Three red flags on five lines. We'll find more in the lab.</p>
 </section>
 
 <section data-background-color="#FF9900">
@@ -71,13 +107,13 @@
   <ul>
     <li>Read a real-looking IAM policy</li>
     <li>List the violations</li>
-    <li>Rewrite scoped to action and resource</li>
+    <li>Rewrite it scoped to the specific actions and resources needed</li>
   </ul>
   <p class="small"><code>labs/lab2-iam-least-privilege.html</code></p>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

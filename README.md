@@ -6,36 +6,40 @@ A 1-day, introductory-level, **lab-heavy** workshop covering the six pillars of 
 
 Engineers, architects, and tech leads with basic AWS familiarity who want a structured way to evaluate and improve their workloads.
 
+## Before the Workshop
+
+Students should read [PRE-READ.md](PRE-READ.md) a few days before class — it covers the six pillars, prerequisites, what to bring, and links to the official [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/).
+
 ## Format
 
 - Eight tight Reveal.js teaching decks (3–5 slides each)
-- **Seven Reveal.js lab decks** — discussion/analysis exercises, no AWS account required
+- **Seven Reveal.js lab decks** — paper-based analysis exercises paired with short, read-only AWS Console navigation
+- Students log into a shared class AWS account for navigation only — no creates or edits
 - All material is single-file HTML — open in any browser, no build step
 - About 60% of class time is hands-on
 
 ## Day Schedule
 
+Class runs **09:00 – 16:00**. Instructor calls breaks as needed.
+
 | Time          | Module / Lab                                          | Link                                                                   |
 | ------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
 | 09:00 – 09:20 | 1. Introduction &amp; Framework Overview              | [01-introduction.html](presentations/01-introduction.html)             |
-| 09:20 – 09:40 | 2. Operational Excellence (teaching)                  | [02-operational-excellence.html](presentations/02-operational-excellence.html) |
-| 09:40 – 10:05 | **Lab 1 — Runbook Authoring**                         | [labs/lab1-runbook-authoring.md](labs/lab1-runbook-authoring.html)       |
-| 10:05 – 10:20 | *Break*                                               |                                                                        |
-| 10:20 – 10:40 | 3. Security (teaching)                                | [03-security.html](presentations/03-security.html)                     |
-| 10:40 – 11:10 | **Lab 2 — IAM Least Privilege Review**                | [labs/lab2-iam-least-privilege.md](labs/lab2-iam-least-privilege.html)   |
-| 11:10 – 11:30 | 4. Reliability (teaching)                             | [04-reliability.html](presentations/04-reliability.html)               |
-| 11:30 – 11:55 | **Lab 3 — DR Pattern Selection**                      | [labs/lab3-dr-pattern-selection.md](labs/lab3-dr-pattern-selection.html) |
-| 11:55 – 12:55 | *Lunch*                                               |                                                                        |
-| 12:55 – 13:15 | 5. Performance Efficiency (teaching)                  | [05-performance-efficiency.html](presentations/05-performance-efficiency.html) |
-| 13:15 – 13:40 | **Lab 4 — Compute Selection**                         | [labs/lab4-compute-selection.md](labs/lab4-compute-selection.html)       |
-| 13:40 – 14:00 | 6. Cost Optimization (teaching)                       | [06-cost-optimization.html](presentations/06-cost-optimization.html)   |
-| 14:00 – 14:30 | **Lab 5 — Cost Allocation Analysis**                  | [labs/lab5-cost-allocation-analysis.md](labs/lab5-cost-allocation-analysis.html) |
-| 14:30 – 14:45 | *Break*                                               |                                                                        |
-| 14:45 – 15:00 | 7. Sustainability (teaching)                          | [07-sustainability.html](presentations/07-sustainability.html)         |
-| 15:00 – 15:20 | **Lab 6 — Sustainability Quick Wins**                 | [labs/lab6-sustainability-quick-wins.md](labs/lab6-sustainability-quick-wins.html) |
-| 15:20 – 15:40 | 8. Practical Application &amp; Wrap-Up                | [08-practical-application.html](presentations/08-practical-application.html) |
-| 15:40 – 16:25 | **Lab 7 — Mini Well-Architected Review (Capstone)**   | [labs/lab7-mini-wa-review.md](labs/lab7-mini-wa-review.html)             |
-| 16:25 – 17:00 | Capstone debrief &amp; Q &amp; A                      |                                                                        |
+| 09:20 – 09:40 | 2. Operational Excellence                             | [02-operational-excellence.html](presentations/02-operational-excellence.html) |
+| 09:40 – 10:10 | **Lab 1 — Runbook Authoring** (incl. AWS login)       | [lab1-runbook-authoring.html](labs/lab1-runbook-authoring.html)        |
+| 10:10 – 10:30 | 3. Security                                           | [03-security.html](presentations/03-security.html)                     |
+| 10:30 – 11:00 | **Lab 2 — IAM Least Privilege Review**                | [lab2-iam-least-privilege.html](labs/lab2-iam-least-privilege.html)    |
+| 11:00 – 11:20 | 4. Reliability                                        | [04-reliability.html](presentations/04-reliability.html)               |
+| 11:20 – 11:45 | **Lab 3 — DR Pattern Selection**                      | [lab3-dr-pattern-selection.html](labs/lab3-dr-pattern-selection.html)  |
+| 11:45 – 12:45 | *Lunch*                                               |                                                                        |
+| 12:45 – 13:05 | 5. Performance Efficiency                             | [05-performance-efficiency.html](presentations/05-performance-efficiency.html) |
+| 13:05 – 13:30 | **Lab 4 — Compute Selection**                         | [lab4-compute-selection.html](labs/lab4-compute-selection.html)        |
+| 13:30 – 13:50 | 6. Cost Optimization                                  | [06-cost-optimization.html](presentations/06-cost-optimization.html)   |
+| 13:50 – 14:20 | **Lab 5 — Cost Allocation Analysis**                  | [lab5-cost-allocation-analysis.html](labs/lab5-cost-allocation-analysis.html) |
+| 14:20 – 14:35 | 7. Sustainability                                     | [07-sustainability.html](presentations/07-sustainability.html)         |
+| 14:35 – 14:55 | **Lab 6 — Sustainability Quick Wins**                 | [lab6-sustainability-quick-wins.html](labs/lab6-sustainability-quick-wins.html) |
+| 14:55 – 15:15 | 8. Practical Application &amp; Wrap-Up                | [08-practical-application.html](presentations/08-practical-application.html) |
+| 15:15 – 16:00 | **Lab 7 — Mini Well-Architected Review (Capstone)**   | [lab7-mini-wa-review.html](labs/lab7-mini-wa-review.html)              |
 
 ## Repository Layout
 

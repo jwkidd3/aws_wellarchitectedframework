@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2em; }
-  .reveal h2 { font-size: 1.5em; }
-  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.05em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul, .reveal ol { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal .glossary li { font-size: 0.7em; margin-bottom: 4px; }
   .reveal section[data-background-color] h1,
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] h3,
@@ -27,7 +28,7 @@
   .reveal .lab-tag { display:inline-block; background:#fff; color:var(--aws-navy);
     padding:6px 14px; border-radius:20px; font-size:0.55em; font-weight:700;
     letter-spacing:1px; text-transform:uppercase; }
-  .reveal table { font-size: 0.7em; }
+  .reveal table { font-size: 0.68em; }
   .reveal table th, .reveal table td { padding: 5px 12px; border-bottom:1px solid #ddd; }
   .reveal table td.num { text-align:right; }
 </style>
@@ -44,8 +45,24 @@
 
 <section>
   <h2>Objective</h2>
-  <p>Read a sample monthly AWS bill, identify top spenders and obvious waste, and recommend three concrete optimizations to do first.</p>
-  <p class="small">Inherited account, mid-size SaaS app. Last month: <strong>$24,830</strong>.</p>
+  <p>Read a sample monthly AWS bill, identify the top spenders and obvious waste, and recommend three concrete optimizations to do first.</p>
+  <p class="small">Scenario: you inherited the AWS account for a mid-size SaaS application. Last month: <strong>$24,830</strong>.</p>
+</section>
+
+<section>
+  <h2>Terms You'll See</h2>
+  <ul class="glossary">
+    <li><strong>EC2 On-Demand</strong> — virtual servers at full hourly price</li>
+    <li><strong>Aurora</strong> — AWS's managed MySQL/PostgreSQL database</li>
+    <li><strong>EBS</strong> (Elastic Block Store) — disk volumes attached to EC2. <code>gp2</code> and <code>gp3</code> are volume types; <code>gp3</code> is newer, cheaper, and faster</li>
+    <li><strong>NAT Gateway</strong> — lets resources in private subnets reach the internet; charged per hour and per GB of data processed</li>
+    <li><strong>VPC Endpoint</strong> — a private path from your VPC to an AWS service (e.g., S3) that bypasses the NAT Gateway charge</li>
+    <li><strong>Data Transfer Out</strong> — bandwidth leaving AWS to the public internet, billed per GB</li>
+    <li><strong>Snapshot</strong> — a point-in-time backup of an EBS volume, stored in S3</li>
+    <li><strong>Savings Plan / Reserved Instance</strong> — commit to 1 or 3 years of usage for a discount</li>
+    <li><strong>Glacier / Glacier Instant Retrieval / Deep Archive</strong> — cheap S3 storage classes for rarely-accessed data</li>
+    <li><strong>SCP</strong> (Service Control Policy) — account-wide "never allow" rules set at the AWS Organization level</li>
+  </ul>
 </section>
 
 <section>
@@ -59,7 +76,7 @@
     <tr><td>EBS Volumes</td><td class="num">$1,640</td><td class="num">6.6</td></tr>
     <tr><td>NAT Gateway</td><td class="num">$1,230</td><td class="num">5.0</td></tr>
     <tr><td>CloudWatch Logs</td><td class="num">$980</td><td class="num">4.0</td></tr>
-    <tr><td>ELB</td><td class="num">$760</td><td class="num">3.1</td></tr>
+    <tr><td>ELB (Load Balancers)</td><td class="num">$760</td><td class="num">3.1</td></tr>
     <tr><td>Lambda</td><td class="num">$310</td><td class="num">1.2</td></tr>
     <tr><td>Other</td><td class="num">$1,250</td><td class="num">5.0</td></tr>
   </table>
@@ -74,18 +91,19 @@
     <tr><td>dev</td><td class="num">$4,720</td></tr>
     <tr><td>(untagged)</td><td class="num">$1,800</td></tr>
   </table>
+  <p class="small">"Untagged" = resources with no <code>env</code> label, so nobody can attribute the cost to a team or environment.</p>
 </section>
 
 <section>
   <h2>Notes from a Walk-Through</h2>
   <ul>
-    <li><strong>EC2:</strong> 24 instances; 8 × <code>m5.2xlarge</code> at 9% avg CPU. No Savings Plan.</li>
-    <li><strong>RDS:</strong> 4 Aurora clusters; 2 dev clusters running 24×7</li>
-    <li><strong>S3:</strong> 14 TB of legacy logs in Standard, never accessed</li>
-    <li><strong>EBS:</strong> 38 unattached gp2 volumes, 4.2 TB</li>
-    <li><strong>NAT Gateway:</strong> Lambda → S3 traffic via NAT (no VPC endpoint)</li>
-    <li><strong>Logs:</strong> No retention set, infinite by default</li>
-    <li><strong>$1,800 untagged</strong> — nobody can attribute</li>
+    <li><strong>EC2:</strong> 24 instances. 8 × <code>m5.2xlarge</code> at 9% average CPU. No Savings Plan.</li>
+    <li><strong>RDS:</strong> 4 Aurora clusters; 2 tagged <code>dev</code> but running 24×7</li>
+    <li><strong>S3:</strong> 14 TB of legacy logs in the "Standard" storage class, never accessed</li>
+    <li><strong>EBS:</strong> 38 unattached <code>gp2</code> volumes totaling 4.2 TB; oldest snapshot from 2022</li>
+    <li><strong>NAT Gateway:</strong> Lambda in private subnets calls S3 through it (no VPC Endpoint)</li>
+    <li><strong>CloudWatch Logs:</strong> No retention policy — default is infinite</li>
+    <li><strong>$1,800 untagged:</strong> nobody owns it</li>
   </ul>
 </section>
 
@@ -93,8 +111,8 @@
   <h2>Tasks</h2>
   <ol>
     <li>Identify the <strong>top 5 sources of waste</strong> — one sentence each</li>
-    <li>Pick the <strong>3 fixes you'd do first</strong> — justify by impact &amp; effort</li>
-    <li>Estimate <strong>annual savings</strong> for your top three</li>
+    <li>Pick the <strong>3 fixes</strong> you'd do first — justify by impact and effort</li>
+    <li>Estimate <strong>annual savings</strong> for your top three (ballpark is fine)</li>
     <li>Propose one rule that prevents the $1,800 untagged spend going forward</li>
   </ol>
 </section>
@@ -102,28 +120,38 @@
 <section>
   <h2>One Possible Set of Findings</h2>
   <ul>
-    <li>Right-size or consolidate the 8 idle <code>m5.2xlarge</code> → 50–70% on those nodes</li>
-    <li>1-yr Compute Savings Plan on baseline → ~25–30% on covered usage</li>
-    <li>Schedule dev/staging RDS off nights/weekends → ~60% on those clusters</li>
-    <li>Tier 14 TB cold logs to Glacier → ~80–95% on that storage</li>
-    <li>Delete unattached EBS &amp; old snapshots</li>
-    <li>S3 Gateway VPC endpoint to bypass NAT charges</li>
-    <li>CloudWatch Logs retention policy</li>
-    <li>Required tags via SCP / Config rule</li>
+    <li>Right-size or consolidate the 8 idle <code>m5.2xlarge</code> → 50–70% off those nodes</li>
+    <li>1-year Compute Savings Plan on the steady baseline → ~25–30% off covered usage</li>
+    <li>Schedule dev/staging RDS off nights &amp; weekends → ~60% off those clusters</li>
+    <li>Tier the 14 TB cold logs to Glacier → ~80–95% off that storage</li>
+    <li>Delete unattached EBS volumes and old snapshots (with owner sign-off)</li>
+    <li>Add an S3 Gateway VPC Endpoint to bypass NAT Gateway charges for S3 traffic</li>
+    <li>Set CloudWatch Logs retention (30 days dev, 90 days prod)</li>
+    <li>Enforce required tags via SCP or AWS Config rule</li>
   </ul>
+</section>
+
+<section>
+  <h2>Console Exploration (read-only)</h2>
+  <p class="small">Navigate only — <strong>do not create budgets or change settings</strong>.</p>
+  <ol>
+    <li>Search for <strong>Cost Explorer</strong> → view the last 6 months of spend. Try grouping by Service and by Tag.</li>
+    <li>Open <strong>Budgets</strong> in the left nav — browse any existing budgets.</li>
+    <li>Search for <strong>Compute Optimizer</strong> → view recommendations, if any. These are the "right-sizing" suggestions AWS generates automatically.</li>
+  </ol>
 </section>
 
 <section data-background-color="#146EB4">
   <h2>Discussion</h2>
   <ul>
     <li>Which fixes are one-time vs. ongoing?</li>
-    <li>Engineering work vs. finance/procurement decision?</li>
+    <li>Which need engineering work vs. a finance/procurement decision?</li>
     <li>How do you avoid backsliding three months from now?</li>
   </ul>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

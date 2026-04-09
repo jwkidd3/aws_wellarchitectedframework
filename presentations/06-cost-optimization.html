@@ -11,14 +11,14 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.7em; color:#555; }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -33,32 +33,56 @@
 <section class="title-slide">
   <h1>Pillar 5</h1>
   <h3 class="accent">Cost Optimization</h3>
+  <p class="small">Avoid unnecessary cost — at every layer.</p>
 </section>
 
 <section>
-  <h2>Awareness</h2>
+  <h2>How AWS Billing Actually Works</h2>
   <ul>
-    <li><strong>Cost Explorer</strong>, <strong>Budgets</strong>, <strong>Anomaly Detection</strong></li>
-    <li>Tag every resource: <code>env</code>, <code>owner</code>, <code>cost-center</code></li>
-    <li>You can't optimize what you can't attribute</li>
+    <li><strong>Metered, pay-as-you-go</strong> — you're billed for what you use, typically by the second or hour</li>
+    <li>No up-front cost to spin something up; no refund for idle time</li>
+    <li>Charges come from many dimensions: compute hours, storage GB, data transfer GB, API calls, etc.</li>
+    <li><strong>Data transfer out</strong> to the internet costs real money; data <em>in</em> is usually free</li>
+    <li>Even "small" services (NAT Gateway, idle load balancers, old snapshots) can quietly add hundreds of dollars/month</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Know What You're Spending</h2>
+  <ul>
+    <li><strong>Cost Explorer</strong> — AWS's built-in tool to visualize spend by service, account, or tag</li>
+    <li><strong>Budgets</strong> — email/SMS alerts when cost or usage crosses a threshold</li>
+    <li><strong>Cost Anomaly Detection</strong> — machine-learning alerts for unusual cost spikes</li>
+    <li><strong>Tagging</strong> — label every resource with metadata like <code>env=prod</code>, <code>owner=team-a</code>, <code>cost-center=42</code>. You can't optimize what you can't attribute.</li>
   </ul>
 </section>
 
 <section>
   <h2>Pricing Models</h2>
   <ul>
-    <li><strong>On-Demand</strong> — full price, full flexibility</li>
-    <li><strong>Savings Plans</strong> — commit, save up to ~72%</li>
-    <li><strong>Spot</strong> — up to 90% off, interruptible</li>
-    <li><strong>Right-size</strong> with Compute Optimizer</li>
+    <li><strong>On-Demand</strong> — full price, pay per hour/second, no commitment</li>
+    <li><strong>Savings Plans</strong> — commit to a $/hour spend for 1 or 3 years → up to ~72% off</li>
+    <li><strong>Reserved Instances (RI)</strong> — older commitment model, still used for RDS</li>
+    <li><strong>Spot</strong> — unused AWS capacity at up to ~90% off, but AWS can reclaim it with 2 minutes' notice. Great for batch jobs and stateless workers that can restart.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Right-Sizing</h2>
+  <p class="small"><em>Right-sizing</em> = matching the instance size to what the workload actually needs.</p>
+  <ul>
+    <li><strong>Compute Optimizer</strong> — AWS service that recommends smaller/cheaper instance types based on real usage</li>
+    <li>Look for instances sustained under ~20% CPU</li>
+    <li>Don't forget storage: upgrade <code>gp2</code> → <code>gp3</code> EBS volumes (cheaper and faster), delete unattached volumes and old snapshots</li>
   </ul>
 </section>
 
 <section>
   <h2>Match Supply to Demand</h2>
   <ul>
-    <li>Auto Scaling on the metric that matches load</li>
-    <li>Schedule dev/test off outside business hours</li>
+    <li><strong>Auto Scaling</strong> — add servers at peak, remove them at quiet times</li>
+    <li><strong>Schedule</strong> — turn dev/test environments off nights and weekends</li>
+    <li><strong>Serverless</strong> (Lambda, Fargate) — pay only when code actually runs</li>
     <li>Idle infrastructure is the most expensive infrastructure</li>
   </ul>
 </section>
@@ -76,6 +100,6 @@
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

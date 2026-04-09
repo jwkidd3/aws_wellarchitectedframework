@@ -11,14 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2em; }
-  .reveal h2 { font-size: 1.5em; }
-  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.4em; }
+  .reveal h3 { font-size: 1.05em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul, .reveal ol { line-height: 1.5; }
   .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal .glossary li { font-size: 0.72em; margin-bottom: 4px; }
   .reveal section[data-background-color] h1,
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] h3,
@@ -46,20 +47,33 @@
 </section>
 
 <section>
+  <h2>Terms You'll See</h2>
+  <ul class="glossary">
+    <li><strong>EC2</strong> (Elastic Compute Cloud) — virtual machines; you manage the OS and the software on them</li>
+    <li><strong>Container</strong> — a self-contained package of code + dependencies that runs the same anywhere</li>
+    <li><strong>ECS / EKS / Fargate</strong> — AWS services for running containers (Fargate = no servers to manage)</li>
+    <li><strong>Lambda</strong> — "serverless" functions; you provide code, AWS runs it when an event fires, and you pay per invocation</li>
+    <li><strong>Spot instance</strong> — discounted EC2 capacity (up to ~90% off) that AWS can reclaim with 2 minutes' notice</li>
+    <li><strong>Checkpoint</strong> — periodically saving progress so a job can resume after interruption</li>
+    <li><strong>GPU</strong> (Graphics Processing Unit) — specialized hardware for highly parallel math, used in ML and scientific computing</li>
+  </ul>
+</section>
+
+<section>
   <h2>Decision Aids</h2>
   <ul>
-    <li><strong>Lambda</strong> — short bursty work, event-driven, unpredictable load, minimal ops</li>
-    <li><strong>Containers</strong> — long-running services, complex runtimes, portability, steady or predictable load</li>
-    <li><strong>EC2</strong> — specialized hardware, GPU, very long jobs, host-level licensing, OS control</li>
+    <li><strong>Lambda</strong> shines for: short bursty work, event-driven, unpredictable load, minimal operations overhead</li>
+    <li><strong>Containers</strong> shine for: long-running services, complex runtimes, portability, steady or predictable burst load</li>
+    <li><strong>EC2</strong> shines for: specialized hardware (GPU, huge RAM), very long jobs, software licensed to a specific host, or when you genuinely need OS-level control</li>
   </ul>
 </section>
 
 <section>
   <h2>Workload A — Image Thumbnail Generator</h2>
   <ul>
-    <li>Triggered when a user uploads to S3</li>
-    <li>~50,000 events/day, very bursty (evening spikes)</li>
-    <li>Each invocation 2–8 seconds, mostly CPU</li>
+    <li>Triggered each time a user uploads a photo to S3</li>
+    <li>~50,000 events/day, very bursty (spikes in the evenings)</li>
+    <li>Each invocation runs 2–8 seconds, mostly CPU work</li>
     <li>Must scale instantly; idle most of the night</li>
   </ul>
 </section>
@@ -67,10 +81,10 @@
 <section>
   <h2>Workload B — Internal Analytics API</h2>
   <ul>
-    <li>Steady ~200 req/sec, 24×7</li>
-    <li>Custom Python with native deps (NumPy, pandas, C library)</li>
-    <li>Avg 150 ms; long tail to 2 sec</li>
-    <li>Team has Kubernetes experience &amp; CI for images</li>
+    <li>Steady ~200 requests per second, 24×7</li>
+    <li>Custom Python service with native dependencies (NumPy, pandas, a C library)</li>
+    <li>Average request 150 ms; long tail of 2-second requests</li>
+    <li>Team has Kubernetes experience and existing CI for container images</li>
   </ul>
 </section>
 
@@ -79,8 +93,8 @@
   <ul>
     <li>Batch job, 6–12 hours per execution</li>
     <li>Requires 192 GB RAM and a specific GPU instance family</li>
-    <li>Runs 3–4 times/week, scheduled in advance</li>
-    <li>Cost-sensitive; interruption recoverable from checkpoint</li>
+    <li>Runs 3–4 times per week, scheduled in advance</li>
+    <li>Cost-sensitive; interruption is recoverable from a checkpoint</li>
   </ul>
 </section>
 
@@ -88,9 +102,20 @@
   <h2>For Each Workload</h2>
   <ol>
     <li><strong>Compute choice</strong> — Lambda, Containers, or EC2</li>
-    <li><strong>Specifics</strong> — instance type / Lambda memory / Fargate vCPU</li>
+    <li><strong>Specifics</strong> — instance type / Lambda memory / Fargate vCPU as relevant</li>
     <li><strong>Why not the others</strong> — one sentence per rejected option</li>
-    <li><strong>Pillar interactions</strong> — Cost, Reliability, Sustainability impact</li>
+    <li><strong>Pillar interactions</strong> — does your choice change Cost, Reliability, or Sustainability outcomes?</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Console Exploration (read-only)</h2>
+  <p class="small">Navigate only — <strong>do not launch, stop, or modify anything</strong>.</p>
+  <ol>
+    <li>Search for <strong>EC2</strong> → <strong>Instances</strong>. Notice the instance types running.</li>
+    <li>Search for <strong>Lambda</strong> → <strong>Functions</strong>. Open any function and look at the Configuration tab — memory, timeout, trigger.</li>
+    <li>Search for <strong>ECS</strong> → <strong>Clusters</strong>. Browse any clusters and their tasks.</li>
+    <li>Compare: same application could live in any of these — the choice is about fit, not capability.</li>
   </ol>
 </section>
 
@@ -98,13 +123,13 @@
   <h2>Discussion</h2>
   <ul>
     <li>Which workload had the most divided answers?</li>
-    <li>Spot instances — appropriate for C? For A?</li>
-    <li>What would have to change to make Lambda right for B?</li>
+    <li>Would Spot instances be appropriate for Workload C? For A?</li>
+    <li>What would have to change to make Lambda the right answer for Workload B?</li>
   </ul>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

@@ -11,13 +11,15 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; letter-spacing: -0.5px; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal .small { font-size: 0.7em; color:#555; }
+  .reveal .glossary li { font-size: 0.78em; margin-bottom: 4px; }
+  .reveal .glossary strong { color: var(--aws-navy); }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -37,8 +39,9 @@
 <section>
   <h2>What &amp; Why</h2>
   <ul>
-    <li>AWS's set of cloud architecture best practices, distilled from thousands of customer reviews</li>
-    <li>Shared vocabulary for trade-offs across engineering, security, and finance</li>
+    <li><strong>AWS</strong> = Amazon Web Services, the cloud platform</li>
+    <li>The <strong>Well-Architected Framework</strong> is AWS's set of best practices for building cloud systems, distilled from thousands of customer reviews</li>
+    <li>It gives engineering, security, and finance teams a shared vocabulary for trade-offs</li>
     <li>Catches risk <em>before</em> it becomes an incident</li>
   </ul>
 </section>
@@ -46,28 +49,68 @@
 <section>
   <h2>The Six Pillars</h2>
   <div class="pillar-grid">
-    <div><strong>1. Operational Excellence</strong></div>
-    <div><strong>2. Security</strong></div>
-    <div><strong>3. Reliability</strong></div>
-    <div><strong>4. Performance Efficiency</strong></div>
-    <div><strong>5. Cost Optimization</strong></div>
-    <div><strong>6. Sustainability</strong></div>
+    <div><strong>1. Operational Excellence</strong><br><span class="small">Run &amp; improve systems</span></div>
+    <div><strong>2. Security</strong><br><span class="small">Protect data &amp; access</span></div>
+    <div><strong>3. Reliability</strong><br><span class="small">Recover from failure</span></div>
+    <div><strong>4. Performance Efficiency</strong><br><span class="small">Use resources well</span></div>
+    <div><strong>5. Cost Optimization</strong><br><span class="small">Avoid waste</span></div>
+    <div><strong>6. Sustainability</strong><br><span class="small">Reduce footprint</span></div>
   </div>
   <p class="small">One pillar per module. Each pillar has a hands-on lab.</p>
 </section>
 
 <section>
-  <h2>The Well-Architected Tool</h2>
+  <h2>The Shared Responsibility Model</h2>
+  <p class="small">A foundational AWS concept that runs through every pillar.</p>
   <ul>
-    <li>Free service in the AWS Console</li>
-    <li>Guided questionnaire per pillar, per workload</li>
-    <li>Generates a risk report and remediation plan</li>
-    <li>We'll run a mini-review as the capstone lab</li>
+    <li><strong>AWS is responsible for</strong> security <em>of</em> the cloud: data centers, hardware, the hypervisor, the physical network, and the underlying services</li>
+    <li><strong>You are responsible for</strong> security <em>in</em> the cloud: your data, your code, your IAM policies, your network config, your patches</li>
+    <li>The line shifts by service: with <strong>EC2</strong> you patch the OS; with <strong>Lambda</strong> AWS does; with <strong>S3</strong> AWS runs the storage but you own access control</li>
+    <li>When something goes wrong, knowing which side of the line the problem sits on is the first question</li>
   </ul>
+</section>
+
+<section>
+  <h2>Common AWS Services You'll See Today</h2>
+  <ul class="glossary">
+    <li><strong>EC2</strong> (Elastic Compute Cloud) — virtual servers you rent by the hour/second</li>
+    <li><strong>S3</strong> (Simple Storage Service) — object storage for files, backups, logs</li>
+    <li><strong>RDS</strong> (Relational Database Service) — managed databases (MySQL, PostgreSQL, etc.)</li>
+    <li><strong>Aurora</strong> — AWS's high-performance MySQL/PostgreSQL-compatible database</li>
+    <li><strong>Lambda</strong> — run code without managing servers ("serverless")</li>
+    <li><strong>VPC</strong> (Virtual Private Cloud) — your own private network inside AWS</li>
+    <li><strong>IAM</strong> (Identity and Access Management) — who can do what</li>
+    <li><strong>CloudWatch</strong> — metrics, logs, and alarms</li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Well-Architected Tool</h2>
+  <p class="small">A <em>workload</em> = the collection of components that delivers some business value (an app, a service, a pipeline).</p>
+  <ul>
+    <li>A free service in the AWS Console</li>
+    <li>You define a workload and then answer a questionnaire, pillar by pillar</li>
+    <li>Each answer maps to one or more <strong>best practices</strong>; unmet practices become <strong>findings</strong></li>
+    <li>Findings are scored <strong>High Risk / Medium Risk / None</strong> and linked to an <strong>improvement plan</strong> (AWS docs, services, patterns)</li>
+    <li>You can save a <strong>milestone</strong> (a snapshot) and re-review later to track progress</li>
+  </ul>
+</section>
+
+<section>
+  <h2>A Typical Review Flow</h2>
+  <ol>
+    <li>Architect and pillar owners meet for 60–90 min</li>
+    <li>Walk through each pillar's questions together, answer honestly</li>
+    <li>Tool produces a risk report at the end</li>
+    <li>Group findings into themes, assign owners, set target dates</li>
+    <li>Add remediation items to the normal engineering backlog</li>
+    <li>Re-run the review quarterly or at major milestones</li>
+  </ol>
+  <p class="small">This is what you'll practice in the capstone lab.</p>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

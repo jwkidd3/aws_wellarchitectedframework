@@ -11,13 +11,14 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.7em; color:#555; }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -32,25 +33,64 @@
 <section class="title-slide">
   <h1>Pillar 6</h1>
   <h3 class="accent">Sustainability</h3>
+  <p class="small">Minimize the environmental impact of your cloud workloads.</p>
 </section>
 
 <section>
   <h2>Shared Responsibility</h2>
   <ul>
-    <li><strong>AWS:</strong> sustainability <em>of</em> the cloud — power, hardware, cooling</li>
-    <li><strong>You:</strong> sustainability <em>in</em> the cloud — what &amp; how you provision</li>
+    <li><strong>AWS is responsible for</strong> sustainability <em>of</em> the cloud — power sources, hardware efficiency, data center cooling</li>
+    <li><strong>You are responsible for</strong> sustainability <em>in</em> the cloud — what you provision and how efficiently it runs</li>
     <li>Goal: more useful work per unit of energy</li>
   </ul>
 </section>
 
 <section>
-  <h2>Levers</h2>
+  <h2>Region Selection</h2>
   <ul>
-    <li><strong>Region selection</strong> — greener regions for non-latency-sensitive work</li>
-    <li><strong>Right-size &amp; auto-scale</strong> — high utilization beats idle</li>
-    <li><strong>Managed services</strong> — multi-tenant efficiency</li>
-    <li><strong>Storage tiering &amp; lifecycle</strong> — don't store what you won't read</li>
-    <li><strong>Graviton</strong> — more work per watt</li>
+    <li>Some AWS Regions run on a higher mix of renewable energy than others</li>
+    <li>For work that isn't latency-sensitive (nightly batch jobs, analytics), pick a greener region</li>
+    <li>Balance against latency, data residency laws, and cost</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Why the Cloud Can Be Greener</h2>
+  <ul>
+    <li>AWS data centers run at much higher utilization than most on-prem ones — less idle hardware per unit of work</li>
+    <li>Hyperscale cooling and power delivery is dramatically more efficient than small server rooms</li>
+    <li>AWS is investing in renewable power for its regions; some regions are well ahead of others</li>
+    <li>None of that matters if <em>your</em> workload runs 100 idle EC2 instances 24×7 — the customer side of the shared responsibility is where most of the leverage lives</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Efficient Resource Use</h2>
+  <ul>
+    <li>Right-sizing is both a cost <em>and</em> sustainability practice</li>
+    <li>High utilization beats idle capacity</li>
+    <li><strong>Auto Scaling</strong> and <strong>serverless</strong> raise utilization by default</li>
+    <li><strong>Graviton</strong> — AWS's own ARM-based CPUs that deliver more work per watt than equivalent Intel/AMD instances</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Data Management</h2>
+  <ul>
+    <li><strong>Storage tiering</strong> — move rarely-accessed data to cheaper, lower-energy storage classes</li>
+    <li><strong>S3 Intelligent-Tiering</strong> — moves objects between classes automatically</li>
+    <li><strong>S3 Glacier</strong> — very cheap archival storage (retrieval takes minutes to hours)</li>
+    <li><strong>Lifecycle policies</strong> — auto-expire or auto-archive objects after N days</li>
+    <li>Don't store what you'll never read back</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Architecture Patterns</h2>
+  <ul>
+    <li>Asynchronous &amp; queue-based — smooths bursty load, raises utilization</li>
+    <li>Edge caching via <strong>CloudFront</strong> — fewer origin requests, less long-haul traffic</li>
+    <li>Efficient code is efficient energy: a 2× speedup is a 2× efficiency gain</li>
   </ul>
 </section>
 
@@ -58,7 +98,7 @@
   <span class="lab-tag">Hands-On Lab</span>
   <h2>Lab 6 — Sustainability Quick Wins</h2>
   <ul>
-    <li>Review an architecture diagram</li>
+    <li>Review an architecture description</li>
     <li>List sustainability improvements</li>
     <li>Map each one to a Cost or Performance benefit</li>
   </ul>
@@ -67,6 +107,6 @@
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

@@ -11,13 +11,14 @@
   :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
   .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; }
   .reveal h1 { font-size: 2.2em; }
-  .reveal h2 { font-size: 1.6em; }
-  .reveal h3 { font-size: 1.15em; color: var(--aws-blue); }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
   .reveal section { text-align: left; }
   .reveal section.title-slide { text-align: center; }
   .reveal .accent { color: var(--aws-orange); }
   .reveal ul { line-height: 1.5; }
-  .reveal .small { font-size: 0.75em; color:#555; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.7em; color:#555; }
   .reveal section[data-background-color] h2,
   .reveal section[data-background-color] p,
   .reveal section[data-background-color] li { color: #fff; }
@@ -32,15 +33,62 @@
 <section class="title-slide">
   <h1>Pillar 4</h1>
   <h3 class="accent">Performance Efficiency</h3>
+  <p class="small">Match resources to the workload so it runs fast enough without waste.</p>
 </section>
 
 <section>
-  <h2>Pick the Right Tool</h2>
+  <h2>Latency vs. Throughput</h2>
+  <p class="small">Two different "fast" — and they sometimes trade off.</p>
   <ul>
-    <li><strong>Compute:</strong> EC2 / Containers / Lambda</li>
-    <li><strong>Storage:</strong> S3, EBS, EFS — match access pattern</li>
-    <li><strong>Database:</strong> RDS, Aurora, DynamoDB, ElastiCache</li>
-    <li>Workload shape drives the choice — not familiarity</li>
+    <li><strong>Latency</strong> = how long a single request takes (milliseconds)</li>
+    <li><strong>Throughput</strong> = how many requests you can handle per second</li>
+    <li>A batch pipeline optimizes for throughput; an API optimizes for latency</li>
+    <li>Caching often improves both; adding replicas often improves throughput but not single-request latency</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Scaling: Horizontal vs. Vertical</h2>
+  <ul>
+    <li><strong>Vertical scaling</strong> — make the server bigger (more CPU, more RAM). Simple, but has a ceiling and a restart.</li>
+    <li><strong>Horizontal scaling</strong> — add more servers. Needs a stateless design and a load balancer, but has no ceiling.</li>
+    <li>AWS Auto Scaling is horizontal by default</li>
+    <li>Databases historically scaled vertically; modern services like DynamoDB and Aurora scale horizontally</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Compute Options</h2>
+  <ul>
+    <li><strong>EC2</strong> — traditional virtual machines; you manage the OS</li>
+    <li><strong>Containers</strong> — package code + dependencies, run on:
+      <ul>
+        <li><strong>ECS</strong> (Elastic Container Service) — AWS's own container orchestrator</li>
+        <li><strong>EKS</strong> (Elastic Kubernetes Service) — managed Kubernetes</li>
+        <li><strong>Fargate</strong> — run containers without managing servers at all</li>
+      </ul>
+    </li>
+    <li><strong>Lambda</strong> — serverless functions; you provide code, AWS runs it on demand</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Storage Options</h2>
+  <ul>
+    <li><strong>S3</strong> — object storage for files, backups, web assets; cheap and virtually unlimited</li>
+    <li><strong>EBS</strong> (Elastic Block Store) — hard-disk-style volumes attached to an EC2 instance</li>
+    <li><strong>EFS</strong> (Elastic File System) — shared file system mountable by many servers at once</li>
+    <li><strong>FSx</strong> — managed Windows / Lustre / NetApp file systems for specialized needs</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Database Options</h2>
+  <ul>
+    <li><strong>RDS / Aurora</strong> — managed relational databases (MySQL, PostgreSQL, etc.)</li>
+    <li><strong>DynamoDB</strong> — managed NoSQL key-value database; scales to huge volumes</li>
+    <li><strong>ElastiCache</strong> — managed in-memory cache (Redis, Memcached)</li>
+    <li><strong>OpenSearch</strong> — managed search and analytics engine</li>
   </ul>
 </section>
 
@@ -48,15 +96,19 @@
   <h2>Measure, Don't Guess</h2>
   <ul>
     <li>Load test before launch and after big changes</li>
-    <li>CloudWatch + X-Ray + Performance Insights</li>
-    <li>Target p95 / p99, not averages</li>
+    <li><strong>Performance Insights</strong> — RDS/Aurora tool that shows the slowest queries</li>
+    <li><strong>X-Ray</strong> — find the slow piece of a distributed request</li>
+    <li>Track <strong>p95 / p99 latency</strong> — "95% (or 99%) of requests finish in under this time"
+      <br><span class="small">Averages hide slow outliers; percentiles show what users actually feel.</span></li>
   </ul>
 </section>
 
 <section>
   <h2>Trade-Offs</h2>
   <ul>
-    <li><strong>Caching</strong>, <strong>read replicas</strong>, <strong>CDN</strong></li>
+    <li><strong>Caching</strong> — store frequently-read data in fast memory (ElastiCache, DAX for DynamoDB)</li>
+    <li><strong>Read replicas</strong> — copies of a database that serve read queries, offloading the primary</li>
+    <li><strong>CDN</strong> (Content Delivery Network) — push content to servers near users. AWS's CDN is <strong>CloudFront</strong>.</li>
     <li>Each adds complexity — don't add until you've measured the need</li>
   </ul>
 </section>
@@ -67,13 +119,13 @@
   <ul>
     <li>Three workload descriptions</li>
     <li>Choose Lambda / Containers / EC2 for each</li>
-    <li>Justify with traffic shape, runtime, and ops cost</li>
+    <li>Justify by traffic shape, runtime, and operational cost</li>
   </ul>
   <p class="small"><code>labs/lab4-compute-selection.html</code></p>
 </section>
 
 </div></div>
 <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade' });</script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
 </body>
 </html>

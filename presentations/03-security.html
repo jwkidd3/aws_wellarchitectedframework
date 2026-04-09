@@ -39,6 +39,19 @@
 </section>
 
 <section>
+  <h2>Defense in Depth</h2>
+  <p class="small">No single control is enough. Layer them so an attacker has to defeat several.</p>
+  <ul>
+    <li><strong>Identity layer</strong> — strong authentication, MFA, least privilege</li>
+    <li><strong>Network layer</strong> — VPCs, security groups, WAF, private subnets</li>
+    <li><strong>Application layer</strong> — input validation, dependency scanning, secrets management</li>
+    <li><strong>Data layer</strong> — encryption at rest and in transit, key rotation, backups</li>
+    <li><strong>Detection layer</strong> — logs, alerts, threat detection</li>
+  </ul>
+  <p class="small">If one layer fails, the next one should slow the attacker down.</p>
+</section>
+
+<section>
   <h2>Authentication vs. Authorization</h2>
   <p class="small">Two different questions people often conflate.</p>
   <ul>
@@ -61,6 +74,35 @@
 </section>
 
 <section>
+  <h2>MFA and Root Account Protection</h2>
+  <ul>
+    <li><strong>MFA</strong> (Multi-Factor Authentication) — password plus a second factor (phone app, hardware key)</li>
+    <li>Every human account should have MFA enabled — no exceptions</li>
+    <li>The <strong>root account</strong> is the original all-powerful account; lock it away:
+      <ul>
+        <li>Hardware MFA</li>
+        <li>No access keys</li>
+        <li>Used only for billing or to recover access</li>
+      </ul>
+    </li>
+    <li>Do daily work with IAM users or federated identities — not root</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Anatomy of an IAM Policy</h2>
+  <p class="small">Four things a policy statement specifies:</p>
+  <ul>
+    <li><strong>Effect</strong> — Allow or Deny</li>
+    <li><strong>Action</strong> — which API calls (<code>s3:GetObject</code>)</li>
+    <li><strong>Resource</strong> — which ARN(s) the actions apply to</li>
+    <li><strong>Condition</strong> — optional constraints (region, source IP, MFA required, tag values)</li>
+  </ul>
+  <p class="small">Example condition: <code>"aws:RequestedRegion": "us-east-1"</code> blocks use of the role outside one region.</p>
+  <p class="small">Explicit <strong>Deny</strong> always wins over Allow — useful for guardrails.</p>
+</section>
+
+<section>
   <h2>Detective Controls</h2>
   <p class="small"><em>Detective controls</em> find problems after they happen so you can respond.</p>
   <ul>
@@ -71,13 +113,25 @@
 </section>
 
 <section>
-  <h2>Network Protection</h2>
+  <h2>VPC — Network Anatomy</h2>
   <ul>
-    <li><strong>VPC</strong> (Virtual Private Cloud) — your private network in AWS; divide into public and private <em>subnets</em></li>
-    <li><strong>Security groups</strong> — per-instance firewalls (stateful: return traffic is automatic)</li>
-    <li><strong>NACLs</strong> (Network Access Control Lists) — subnet-level firewalls (stateless)</li>
-    <li><strong>WAF</strong> (Web Application Firewall) — blocks attacks like SQL injection and cross-site scripting</li>
-    <li><strong>Shield</strong> — protection against DDoS attacks</li>
+    <li><strong>VPC</strong> — your isolated virtual network in AWS, spanning multiple AZs</li>
+    <li><strong>Subnet</strong> — a slice of the VPC's IP range, tied to one AZ</li>
+    <li><strong>Public subnet</strong> — has a route to an <strong>Internet Gateway</strong>; resources here can be reached from the internet</li>
+    <li><strong>Private subnet</strong> — no direct internet path; outbound goes through a <strong>NAT Gateway</strong></li>
+    <li>Pattern: web/load-balancer in public subnets, app and database in private subnets</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Network Protection Controls</h2>
+  <ul>
+    <li><strong>Security groups</strong> — per-instance firewalls, <em>stateful</em> (return traffic is automatic). Default-deny.</li>
+    <li><strong>NACLs</strong> (Network Access Control Lists) — subnet-level firewalls, <em>stateless</em>. Rarely needed beyond defaults.</li>
+    <li><strong>WAF</strong> (Web Application Firewall) — blocks L7 attacks: SQL injection, XSS, bot traffic</li>
+    <li><strong>Shield</strong> — protection against DDoS attacks (Shield Standard is free; Advanced is paid)</li>
+    <li><strong>Network Firewall</strong> — deep-inspection firewall for egress filtering</li>
+    <li><strong>PrivateLink / VPC endpoints</strong> — reach AWS services without traversing the public internet</li>
   </ul>
 </section>
 
@@ -88,6 +142,19 @@
     <li><strong>In transit</strong> (moving across the network): use <strong>TLS</strong> (Transport Layer Security — the "s" in https)</li>
     <li>Classify data — not every data set needs the same controls</li>
     <li>Backups must be encrypted <em>and</em> tested</li>
+    <li><strong>Secrets Manager</strong> / <strong>Parameter Store</strong> — never put passwords or API keys in code or env files</li>
+    <li>Rotate keys and secrets on a schedule, automatically if possible</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Incident Response Readiness</h2>
+  <ul>
+    <li>Pre-provision a <strong>forensic account</strong> isolated from production</li>
+    <li>Pre-built <strong>break-glass roles</strong> responders can assume in an emergency</li>
+    <li>Know how to: revoke a session, rotate a key, quarantine an instance, invalidate a token</li>
+    <li>Document contact lists and escalation paths</li>
+    <li>Practice with tabletop exercises <em>and</em> live simulations</li>
   </ul>
 </section>
 

@@ -47,6 +47,30 @@
 </section>
 
 <section>
+  <h2>A Little History</h2>
+  <ul>
+    <li>Started in 2012 as an internal AWS Solutions Architect checklist</li>
+    <li>Published publicly in 2015 with the first 4 pillars</li>
+    <li>Operational Excellence added in 2016, Sustainability in 2021 — now 6 pillars</li>
+    <li>The framework is a living document — AWS updates it as services evolve</li>
+    <li>Downloadable as a PDF whitepaper; the tool is an interactive version</li>
+  </ul>
+</section>
+
+<section>
+  <h2>General Design Principles</h2>
+  <p class="small">Principles that apply across all six pillars.</p>
+  <ul>
+    <li><strong>Stop guessing capacity</strong> — scale on demand, measure real load</li>
+    <li><strong>Test at production scale</strong> — cheap in the cloud, impossible on-prem</li>
+    <li><strong>Automate to make experimentation easier</strong></li>
+    <li><strong>Allow for evolutionary architectures</strong> — no one design lasts forever</li>
+    <li><strong>Drive architectures with data</strong>, not opinions</li>
+    <li><strong>Improve through game days</strong> — practice, don't just plan</li>
+  </ul>
+</section>
+
+<section>
   <h2>The Six Pillars</h2>
   <div class="pillar-grid">
     <div><strong>1. Operational Excellence</strong><br><span class="small">Run &amp; improve systems</span></div>
@@ -97,6 +121,19 @@
 </section>
 
 <section>
+  <h2>Lenses — Pillar Add-Ons</h2>
+  <p class="small">Lenses extend the framework for specific workload types with extra questions.</p>
+  <ul>
+    <li><strong>Serverless Lens</strong> — Lambda, API Gateway, EventBridge workloads</li>
+    <li><strong>SaaS Lens</strong> — multi-tenant software-as-a-service</li>
+    <li><strong>Machine Learning Lens</strong> — training and inference pipelines</li>
+    <li><strong>Data Analytics Lens</strong> — analytics and data warehouse workloads</li>
+    <li><strong>IoT, Financial Services, Games, Healthcare</strong> — and more</li>
+  </ul>
+  <p class="small">Apply a lens when it fits; it adds nuance without replacing the six core pillars.</p>
+</section>
+
+<section>
   <h2>A Typical Review Flow</h2>
   <ol>
     <li>Architect and pillar owners meet for 60–90 min</li>
@@ -107,6 +144,20 @@
     <li>Re-run the review quarterly or at major milestones</li>
   </ol>
   <p class="small">This is what you'll practice in the capstone lab.</p>
+</section>
+
+<section>
+  <h2>Common Anti-Patterns This Course Addresses</h2>
+  <ul>
+    <li>"It works in the console, so we're good" — no Infrastructure as Code</li>
+    <li>"We'll add monitoring after launch" — observability as an afterthought</li>
+    <li>"We have backups" — never tested</li>
+    <li>"Just give the app <code>AdministratorAccess</code> for now"</li>
+    <li>"We picked EC2 because we always pick EC2"</li>
+    <li>"Nobody owns the bill" — no tagging, no accountability</li>
+    <li>"The framework is a one-time audit" — no re-reviews</li>
+  </ul>
+  <p class="small">Every lab today is a direct counter to one of these.</p>
 </section>
 
 </div></div>

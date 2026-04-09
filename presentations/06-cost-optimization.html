@@ -37,6 +37,17 @@
 </section>
 
 <section>
+  <h2>FinOps Mindset</h2>
+  <p class="small"><em>FinOps</em> = Financial Operations: treating cloud cost as a shared engineering + finance responsibility.</p>
+  <ul>
+    <li>Engineers make the decisions that drive cost, so engineers need the cost data</li>
+    <li>Cost reviews belong in sprint planning, not once-a-quarter panic</li>
+    <li><strong>Visibility → accountability → optimization</strong>, in that order</li>
+    <li>Celebrate cost reductions like feature launches</li>
+  </ul>
+</section>
+
+<section>
   <h2>How AWS Billing Actually Works</h2>
   <ul>
     <li><strong>Metered, pay-as-you-go</strong> — you're billed for what you use, typically by the second or hour</li>
@@ -74,6 +85,36 @@
     <li><strong>Compute Optimizer</strong> — AWS service that recommends smaller/cheaper instance types based on real usage</li>
     <li>Look for instances sustained under ~20% CPU</li>
     <li>Don't forget storage: upgrade <code>gp2</code> → <code>gp3</code> EBS volumes (cheaper and faster), delete unattached volumes and old snapshots</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Tagging Strategy</h2>
+  <ul>
+    <li>Tags are key=value labels on resources. They're free, and they're the foundation of cost allocation.</li>
+    <li>Minimum required tags:
+      <ul>
+        <li><code>env</code> — prod, staging, dev</li>
+        <li><code>owner</code> — team or individual</li>
+        <li><code>cost-center</code> — for chargeback</li>
+        <li><code>app</code> — which application</li>
+      </ul>
+    </li>
+    <li>Enforce with <strong>SCPs</strong> or <strong>Config rules</strong> — resources without required tags get blocked or flagged</li>
+    <li>Activate tags as <strong>cost allocation tags</strong> in the Billing console so Cost Explorer can group by them</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Data Transfer — The Silent Killer</h2>
+  <ul>
+    <li>Data transfer charges show up in tiny amounts everywhere and add up fast</li>
+    <li><strong>Free:</strong> data in; most traffic within the same AZ</li>
+    <li><strong>Cheap:</strong> traffic between AZs in the same region (~$0.01/GB each way)</li>
+    <li><strong>More expensive:</strong> cross-region traffic (~$0.02/GB)</li>
+    <li><strong>Most expensive:</strong> data out to the internet ($0.05–$0.09/GB)</li>
+    <li>Use <strong>VPC endpoints</strong> to reach AWS services privately without NAT Gateway data-processing fees</li>
+    <li>Use <strong>CloudFront</strong> — outbound via CloudFront is cheaper than direct from EC2</li>
   </ul>
 </section>
 

@@ -44,6 +44,19 @@
     <li><strong>Small, reversible changes</strong> — deploy often, limit blast radius</li>
     <li><strong>Anticipate failure</strong> — pre-mortems &amp; game days (practice incidents)</li>
     <li><strong>Learn from every event</strong> — every incident produces an action item</li>
+    <li><strong>Refine procedures frequently</strong> — runbooks decay if untouched</li>
+  </ul>
+</section>
+
+<section>
+  <h2>SLIs, SLOs, and SLAs</h2>
+  <p class="small">The vocabulary of "how healthy is healthy enough?"</p>
+  <ul>
+    <li><strong>SLI</strong> (Service Level Indicator) — a specific measurement: "request success rate", "p99 latency"</li>
+    <li><strong>SLO</strong> (Service Level Objective) — the target for an SLI: "99.9% success over 30 days"</li>
+    <li><strong>SLA</strong> (Service Level Agreement) — the SLO in a contract, with consequences if missed</li>
+    <li><strong>Error budget</strong> = 100% minus SLO. Under budget: ship features. Over budget: slow down, invest in reliability.</li>
+    <li>Alarms should fire on burning through the error budget, not on raw metric thresholds</li>
   </ul>
 </section>
 
@@ -78,13 +91,50 @@
 </section>
 
 <section>
+  <h2>Incident → Runbook → Automation</h2>
+  <p class="small">The maturity cycle every ops team should be climbing.</p>
+  <ol>
+    <li><strong>Incident happens</strong> — someone figures it out under pressure</li>
+    <li><strong>Retro</strong> — what did we do, what should we have done</li>
+    <li><strong>Runbook</strong> written — next time it takes 10 minutes, not 2 hours</li>
+    <li><strong>Alert</strong> auto-links to the runbook — on-call doesn't hunt for it</li>
+    <li><strong>Automation</strong> — the runbook becomes a script, then a self-healing system</li>
+    <li><strong>Prevention</strong> — fix the root cause so the alert never fires again</li>
+  </ol>
+</section>
+
+<section>
   <h2>Infrastructure as Code (IaC)</h2>
   <p class="small"><em>IaC</em> = define your cloud resources in text files that are version-controlled and reviewed like application code.</p>
   <ul>
     <li><strong>CloudFormation</strong> — AWS's native IaC; you write YAML or JSON templates and AWS creates the resources</li>
     <li><strong>CDK</strong> (Cloud Development Kit) — define infrastructure in TypeScript/Python/Java; compiles down to CloudFormation</li>
-    <li>Benefits: repeatable, peer-reviewable, drift-detectable</li>
+    <li><strong>Terraform</strong> — popular third-party IaC tool, multi-cloud</li>
+    <li>Benefits: repeatable, peer-reviewable, drift-detectable, disaster-recoverable</li>
     <li>Changes made manually in the console are "operational debt"</li>
+  </ul>
+</section>
+
+<section>
+  <h2>CI/CD in One Slide</h2>
+  <p class="small"><em>CI/CD</em> = Continuous Integration / Continuous Delivery — automated build, test, and deploy.</p>
+  <ul>
+    <li><strong>CI</strong> — every commit builds, runs tests, and produces an artifact</li>
+    <li><strong>CD</strong> — that artifact is automatically promoted through environments (dev → staging → prod)</li>
+    <li>AWS services: <strong>CodePipeline</strong>, <strong>CodeBuild</strong>, <strong>CodeDeploy</strong> — or use GitHub Actions, GitLab, Jenkins</li>
+    <li>Deployments should be one-click, observable, and reversible in under 5 minutes</li>
+    <li>"Manual deployment" is an antipattern, not a step</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Game Days</h2>
+  <ul>
+    <li>Scheduled exercises where the team deliberately breaks something and practices the response</li>
+    <li>Classic targets: kill a random instance, block an AZ, exhaust a connection pool</li>
+    <li>Purpose: find the gaps in runbooks, monitoring, and team knowledge <em>before</em> a real incident</li>
+    <li>Tools: <strong>AWS Fault Injection Simulator</strong> (FIS), Netflix's Chaos Monkey</li>
+    <li>Run regularly — a game day once a year is theater, not practice</li>
   </ul>
 </section>
 

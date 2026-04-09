@@ -104,12 +104,44 @@
 </section>
 
 <section>
-  <h2>Trade-Offs</h2>
+  <h2>Caching Strategies</h2>
   <ul>
-    <li><strong>Caching</strong> — store frequently-read data in fast memory (ElastiCache, DAX for DynamoDB)</li>
-    <li><strong>Read replicas</strong> — copies of a database that serve read queries, offloading the primary</li>
-    <li><strong>CDN</strong> (Content Delivery Network) — push content to servers near users. AWS's CDN is <strong>CloudFront</strong>.</li>
-    <li>Each adds complexity — don't add until you've measured the need</li>
+    <li><strong>Cache-aside (lazy)</strong> — app checks cache first, falls back to DB, then stores the result. Most common.</li>
+    <li><strong>Write-through</strong> — writes go to cache and DB together. Cache is always fresh but writes are slower.</li>
+    <li><strong>Write-behind</strong> — writes go to cache, persist to DB later. Fast but complex.</li>
+    <li><strong>TTL</strong> (Time to Live) — how long an entry stays before it expires. Tune carefully.</li>
+    <li>Hardest problem: <em>invalidation</em>. When does the cache lie?</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Sync vs. Async</h2>
+  <ul>
+    <li><strong>Synchronous</strong> — caller waits for an answer. Simple, but couples caller and callee performance.</li>
+    <li><strong>Asynchronous</strong> — caller drops work on a queue (SQS, EventBridge, Kinesis) and moves on</li>
+    <li>Async smooths out spikes, raises utilization, and enables retries naturally</li>
+    <li>Use async for anything that doesn't need an immediate human-visible answer (emails, image processing, analytics events)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Database Scaling Patterns</h2>
+  <ul>
+    <li><strong>Read replicas</strong> — copies that serve read queries, offloading the primary</li>
+    <li><strong>Sharding</strong> — partition data across multiple databases by key (customer ID, region)</li>
+    <li><strong>Caching layer</strong> — absorb the read-heavy traffic before it hits the DB</li>
+    <li><strong>Choose the right DB</strong> — DynamoDB for huge scale and simple access patterns; Aurora for complex SQL; both are horizontally scalable</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Edge &amp; CDN</h2>
+  <ul>
+    <li><strong>CDN</strong> (Content Delivery Network) — AWS's is <strong>CloudFront</strong></li>
+    <li>Push static content (JS, CSS, images, video) to hundreds of edge locations worldwide</li>
+    <li>Can also cache dynamic API responses with the right cache keys</li>
+    <li>Reduces latency for users, reduces load on your origin, reduces data transfer cost</li>
+    <li>Pair with <strong>Lambda@Edge</strong> or <strong>CloudFront Functions</strong> for light compute at the edge</li>
   </ul>
 </section>
 

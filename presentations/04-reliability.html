@@ -67,12 +67,55 @@
 </section>
 
 <section>
+  <h2>Types of Failure to Plan For</h2>
+  <ul>
+    <li><strong>Single instance</strong> — a server dies (common, cheap to handle)</li>
+    <li><strong>AZ failure</strong> — a whole data center is unreachable (rare but happens yearly-ish)</li>
+    <li><strong>Regional failure</strong> — a whole region has problems (very rare, very painful)</li>
+    <li><strong>Dependency failure</strong> — a service you rely on (internal or third-party) is degraded</li>
+    <li><strong>Human error</strong> — someone runs the wrong command (the most common cause of outages)</li>
+    <li><strong>Gradual degradation</strong> — nothing's broken, but everything's slow</li>
+  </ul>
+</section>
+
+<section>
   <h2>Failure Management</h2>
   <ul>
     <li><strong>Fault isolation</strong> — divide the system so one failure can't take down everything (e.g., multi-AZ)</li>
     <li><strong>Idempotent</strong> operations — safe to retry (running it twice has the same effect as once)</li>
     <li><strong>Backups</strong> — automated, encrypted, <em>restores tested</em> (untested backups often don't work)</li>
     <li><strong>Auto Scaling</strong> — AWS automatically adds/removes servers based on metrics (CPU, queue depth, etc.)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Retry Patterns</h2>
+  <ul>
+    <li><strong>Dumb retry</strong> — hammer the failing service until it works. Makes problems worse.</li>
+    <li><strong>Exponential backoff</strong> — wait 1s, 2s, 4s, 8s between retries. Gives downstream a chance to recover.</li>
+    <li><strong>Jitter</strong> — add randomness so retries from many clients don't all land at once ("thundering herd")</li>
+    <li><strong>Retry budget</strong> — cap total retries; past a point, fail fast</li>
+    <li>AWS SDKs implement all of this by default — use them</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Circuit Breaker &amp; Bulkhead</h2>
+  <ul>
+    <li><strong>Circuit breaker</strong> — when a downstream service is clearly failing, stop calling it for a bit. Fail fast with a fallback. Prevents cascading failures.</li>
+    <li><strong>Bulkhead</strong> — isolate pools of resources so one flood doesn't starve everything (e.g., separate thread pools per downstream dependency)</li>
+    <li><strong>Timeout</strong> — every remote call gets a timeout. Unbounded waits are the single biggest cause of cascading outages.</li>
+    <li><strong>Graceful degradation</strong> — when a non-critical feature fails, disable it and keep the core working</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Health Checks</h2>
+  <ul>
+    <li><strong>Shallow</strong> — "is the process alive?" Fast, cheap, misses logical errors</li>
+    <li><strong>Deep</strong> — "can I actually serve a request end-to-end?" Catches more, but slower and can cascade</li>
+    <li>Load balancers remove instances that fail health checks from rotation automatically</li>
+    <li>Don't make health checks <em>too</em> strict — a dependency failure that flips every instance to unhealthy takes down the whole fleet</li>
   </ul>
 </section>
 

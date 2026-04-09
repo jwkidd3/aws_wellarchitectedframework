@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop Pre-Read</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<style>
+  :root { --aws-orange:#FF9900; --aws-navy:#232F3E; --aws-blue:#146EB4; }
+  .reveal h1, .reveal h2, .reveal h3 { color: var(--aws-navy); font-weight: 600; letter-spacing: -0.5px; }
+  .reveal h1 { font-size: 2.2em; }
+  .reveal h2 { font-size: 1.5em; }
+  .reveal h3 { font-size: 1.1em; color: var(--aws-blue); }
+  .reveal section { text-align: left; }
+  .reveal section.title-slide { text-align: center; }
+  .reveal .accent { color: var(--aws-orange); }
+  .reveal ul, .reveal ol { line-height: 1.5; }
+  .reveal code { background:#f4f4f4; padding:2px 6px; border-radius:4px; color:#c7254e; }
+  .reveal .small { font-size: 0.72em; color:#555; }
+  .reveal a { color: var(--aws-blue); }
+  .reveal section[data-background-color] h1,
+  .reveal section[data-background-color] h2,
+  .reveal section[data-background-color] p,
+  .reveal section[data-background-color] li { color: #fff; }
+  .reveal .pillar-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px 30px; font-size:0.85em; }
+  .reveal .pillar-grid div { border-left:4px solid var(--aws-orange); padding-left:10px; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides">
+
+<section class="title-slide">
+  <h1>Workshop Pre-Read</h1>
+  <h3 class="accent">AWS Well-Architected Best Practices</h3>
+  <p class="small">1 day · Introductory · 09:00 – 16:00</p>
+  <p class="small">Please read this before class — about 10 minutes.</p>
+</section>
+
+<section>
+  <h2>What You're Coming To</h2>
+  <ul>
+    <li>The <strong>AWS Well-Architected Framework</strong> is AWS's set of cloud architecture best practices, distilled from thousands of real customer workload reviews</li>
+    <li>It gives engineering, security, and finance teams a <strong>shared vocabulary</strong> for trade-offs</li>
+    <li>Catches risk <em>before</em> it becomes an incident</li>
+    <li>Organized into <strong>six pillars</strong></li>
+  </ul>
+</section>
+
+<section>
+  <h2>The Six Pillars</h2>
+  <div class="pillar-grid">
+    <div><strong>1. Operational Excellence</strong><br><span class="small">Run &amp; improve systems</span></div>
+    <div><strong>2. Security</strong><br><span class="small">Protect data &amp; access</span></div>
+    <div><strong>3. Reliability</strong><br><span class="small">Recover from failure</span></div>
+    <div><strong>4. Performance Efficiency</strong><br><span class="small">Use resources well</span></div>
+    <div><strong>5. Cost Optimization</strong><br><span class="small">Avoid waste</span></div>
+    <div><strong>6. Sustainability</strong><br><span class="small">Reduce footprint</span></div>
+  </div>
+  <p class="small">One pillar per module. Each pillar has a hands-on lab. The day ends with a capstone lab where you run a lightweight review on a sample workload.</p>
+</section>
+
+<section>
+  <h2>Official Reference</h2>
+  <ul>
+    <li><strong>AWS Well-Architected Framework homepage:</strong><br>
+      <a href="https://aws.amazon.com/architecture/well-architected/" target="_blank">https://aws.amazon.com/architecture/well-architected/</a></li>
+  </ul>
+  <p>You don't need to read this cover-to-cover. Skim the pillar overviews so the names feel familiar on day one.</p>
+</section>
+
+<section>
+  <h2>What You Should Already Know</h2>
+  <p class="small">This is an <strong>introductory</strong> workshop, but you'll get more out of it if you're comfortable with:</p>
+  <ul>
+    <li><strong>What "the cloud" is</strong> — you don't need to be an AWS expert, but you should know that AWS rents compute, storage, and databases as a service</li>
+    <li><strong>Roughly what these three services do:</strong>
+      <ul>
+        <li><strong>EC2</strong> — virtual servers</li>
+        <li><strong>S3</strong> — object storage (buckets and files)</li>
+        <li><strong>IAM</strong> — who can do what in an AWS account</li>
+      </ul>
+    </li>
+    <li><strong>Reading JSON</strong> — a couple of labs show short JSON policies</li>
+    <li><strong>Basic networking concepts</strong> — what a firewall is, what a DNS record is</li>
+  </ul>
+</section>
+
+<section>
+  <h2>If Some of That Is Unfamiliar…</h2>
+  <ul>
+    <li>Don't skip the class — just know the first hour will feel denser</li>
+    <li>The decks include glossaries and the labs define every acronym before using it</li>
+    <li>Your instructor and the people around you are resources — ask questions</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What You Do NOT Need</h2>
+  <ul>
+    <li>An AWS account of your own — a shared class account is provided</li>
+    <li>Any software installed on your laptop — everything runs in the browser</li>
+    <li>Prior Well-Architected Framework experience</li>
+  </ul>
+</section>
+
+<section>
+  <h2>What To Bring</h2>
+  <ul>
+    <li>A laptop with a modern browser (Chrome, Edge, Firefox, or Safari)</li>
+    <li>Pen and paper — most labs are analysis exercises worked through on paper before discussing</li>
+    <li>Questions about workloads you actually own — the framework is most useful when applied to real systems you know</li>
+  </ul>
+</section>
+
+<section>
+  <h2>On the Day</h2>
+  <ul>
+    <li>Your instructor will hand out AWS Console credentials at the start of the day</li>
+    <li>The login URL and your username (<code>user1</code>, <code>user2</code>, …) will be covered in Lab 1</li>
+    <li>You'll use the AWS Console for <strong>navigation only</strong> — no creating, editing, or deleting resources</li>
+    <li>Labs are mostly discussion and analysis; console exploration is a few minutes per lab</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Schedule at a Glance</h2>
+  <ul>
+    <li><strong>09:00 – 12:00</strong> — Pillars 1–3 (Operational Excellence, Security, Reliability) + labs</li>
+    <li><strong>12:00 – 13:00</strong> — Lunch</li>
+    <li><strong>13:00 – 16:00</strong> — Pillars 4–6 (Performance, Cost, Sustainability) + labs + capstone review</li>
+  </ul>
+  <p class="small">Your instructor will call breaks as needed.</p>
+</section>
+
+<section data-background-color="#FF9900">
+  <h2>See You in Class!</h2>
+  <p>Questions before the day? Reach out to your instructor.</p>
+</section>
+
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>Reveal.initialize({ hash: true, slideNumber: 'c/t', transition: 'fade', width: 1280, height: 800, margin: 0.04, minScale: 0.2, maxScale: 2.0 });</script>
+</body>
+</html>

@@ -8,7 +8,7 @@ Engineers, architects, and tech leads with basic AWS familiarity who want a stru
 
 ## Before the Workshop
 
-Students should read [PRE-READ.md](PRE-READ.md) a few days before class — it covers the six pillars, prerequisites, what to bring, and links to the official [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/).
+Students should open [pre-read.html](pre-read.html) a few days before class — it covers the six pillars, prerequisites, what to bring, and links to the official [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/).
 
 ## Format
 

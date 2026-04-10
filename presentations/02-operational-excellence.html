@@ -107,11 +107,23 @@
   <h2>Infrastructure as Code (IaC)</h2>
   <p class="small"><em>IaC</em> = define your cloud resources in text files that are version-controlled and reviewed like application code.</p>
   <ul>
-    <li><strong>CloudFormation</strong> — AWS's native IaC; you write YAML or JSON templates and AWS creates the resources</li>
-    <li><strong>CDK</strong> (Cloud Development Kit) — define infrastructure in TypeScript/Python/Java; compiles down to CloudFormation</li>
-    <li><strong>Terraform</strong> — popular third-party IaC tool, multi-cloud</li>
+    <li><strong>Terraform</strong> — the de facto industry standard; declarative HCL syntax, multi-cloud, huge provider ecosystem</li>
+    <li><strong>CloudFormation</strong> — AWS's native IaC; YAML or JSON templates, tightly integrated with AWS</li>
+    <li><strong>CDK</strong> (Cloud Development Kit) — write infrastructure in TypeScript/Python/Java; compiles down to CloudFormation</li>
     <li>Benefits: repeatable, peer-reviewable, drift-detectable, disaster-recoverable</li>
     <li>Changes made manually in the console are "operational debt"</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Terraform — The Common Case</h2>
+  <p class="small">Most organizations standardize on Terraform because it works across AWS, Azure, GCP, and hundreds of SaaS providers.</p>
+  <ul>
+    <li><strong>Providers</strong> — plugins that know how to talk to each API (the <code>aws</code> provider, the <code>github</code> provider, etc.)</li>
+    <li><strong>State file</strong> — Terraform's record of what it created; store it in an S3 backend with locking via DynamoDB</li>
+    <li><strong>Modules</strong> — reusable building blocks (e.g., a "VPC module" everyone uses)</li>
+    <li>Typical workflow: <code>terraform plan</code> (preview), <code>terraform apply</code> (execute), PR review in between</li>
+    <li>Run from CI/CD, not from a laptop, so state is always consistent</li>
   </ul>
 </section>
 
